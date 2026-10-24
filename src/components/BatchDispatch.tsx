@@ -248,7 +248,7 @@ export const BatchDispatch: React.FC = () => {
                 <Layers className="w-3.5 h-3.5 text-[#FFB81C]" />
                 <span>Pending Requests ({requests.length})</span>
               </h3>
-              <span className="text-[10px] font-mono text-zinc-500">Row Indices i</span>
+              <span className="text-xs font-mono text-zinc-500">Row Indices i</span>
             </div>
 
             <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
@@ -261,12 +261,12 @@ export const BatchDispatch: React.FC = () => {
                     <span className="font-mono text-[#FFB81C] font-semibold">
                       [{idx}] {req.customer_name}
                     </span>
-                    <span className="px-1.5 py-0.5 bg-zinc-900 border border-zinc-700 font-mono text-[10px] text-zinc-300 capitalize">
+                    <span className="px-1.5 py-0.5 bg-zinc-900 border border-zinc-700 font-mono text-xs text-zinc-300 capitalize">
                       {req.category}
                     </span>
                   </div>
-                  <p className="text-zinc-400 text-[11px] truncate mt-1">{req.description}</p>
-                  <div className="flex items-center justify-between mt-2 pt-1 border-t border-zinc-900 text-[10px] text-zinc-500 font-mono">
+                  <p className="text-zinc-400 text-xs truncate mt-1">{req.description}</p>
+                  <div className="flex items-center justify-between mt-2 pt-1 border-t border-zinc-900 text-xs text-zinc-500 font-mono">
                     <span className="flex items-center gap-1">
                       <IndianRupee className="w-3 h-3 text-[#5EE6FF]" />
                       Offer: ₹{req.offered_price}
@@ -285,7 +285,7 @@ export const BatchDispatch: React.FC = () => {
                 <ShieldCheck className="w-3.5 h-3.5 text-[#5EE6FF]" />
                 <span>Worker Pool ({workers.length})</span>
               </h3>
-              <span className="text-[10px] font-mono text-zinc-500">Col Indices j</span>
+              <span className="text-xs font-mono text-zinc-500">Col Indices j</span>
             </div>
 
             <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
@@ -299,7 +299,7 @@ export const BatchDispatch: React.FC = () => {
                       [{idx}] {w.name}
                     </span>
                     <span
-                      className={`text-[9px] font-mono px-1 py-0.5 uppercase ${
+                      className={`text-xs font-mono px-1 py-0.5 uppercase ${
                         w.verification_status === 'verified'
                           ? 'border border-emerald-500/40 text-emerald-400'
                           : 'border border-amber-500/40 text-amber-400'
@@ -308,7 +308,7 @@ export const BatchDispatch: React.FC = () => {
                       {w.verification_status}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between mt-2 text-[10px] text-zinc-400 font-mono">
+                  <div className="flex items-center justify-between mt-2 text-xs text-zinc-400 font-mono">
                     <span>Base: ₹{w.base_rate}</span>
                     <span>★ {w.rating_avg.toFixed(1)}</span>
                     <span className="text-zinc-500">R: {w.radius_km}km</span>
@@ -328,7 +328,7 @@ export const BatchDispatch: React.FC = () => {
                   <Zap className="w-3.5 h-3.5 text-[#FFB81C]" />
                   <span>QUBO Coupling Matrix $c[i][j]$</span>
                 </h3>
-                <p className="text-[11px] text-zinc-500 mt-0.5">
+                <p className="text-xs text-zinc-500 mt-0.5">
                   Lower cost is better. Gold highlighted cells indicate active assignment $x_{'{i,j}'} = 1$.
                 </p>
               </div>
@@ -343,7 +343,7 @@ export const BatchDispatch: React.FC = () => {
             {/* Matrix Heatmap Table */}
             {result?.costMatrix ? (
               <div className="overflow-x-auto pb-2">
-                <table className="w-full border-collapse font-mono text-[11px]">
+                <table className="w-full border-collapse font-mono text-xs">
                   <thead>
                     <tr>
                       <th className="p-1 text-zinc-500 border-b border-zinc-800 text-left font-normal">
@@ -353,7 +353,7 @@ export const BatchDispatch: React.FC = () => {
                         <th
                           key={w.id}
                           title={w.name}
-                          className="p-1.5 text-center text-zinc-400 border-b border-zinc-800 font-mono text-[10px]"
+                          className="p-1.5 text-center text-zinc-400 border-b border-zinc-800 font-mono text-xs"
                         >
                           W{j}
                         </th>
@@ -365,7 +365,7 @@ export const BatchDispatch: React.FC = () => {
                       <tr key={r.id}>
                         <td
                           title={r.customer_name}
-                          className="p-1.5 text-zinc-400 border-r border-zinc-800 font-mono text-[10px] whitespace-nowrap"
+                          className="p-1.5 text-zinc-400 border-r border-zinc-800 font-mono text-xs whitespace-nowrap"
                         >
                           R{i}
                         </td>
@@ -440,7 +440,7 @@ export const BatchDispatch: React.FC = () => {
                   );
                 }
                 return (
-                  <div className="grid grid-cols-2 gap-2 pt-2 text-[11px] text-zinc-400">
+                  <div className="grid grid-cols-2 gap-2 pt-2 text-xs text-zinc-400">
                     <div>ETA: {b.etaMinutes}m ({b.distanceKm} km)</div>
                     <div>Price Diff Term: +{(0.5 * b.priceDiffPercent).toFixed(1)}</div>
                     <div>Rating Penalty: +{b.ratingTerm.toFixed(1)}</div>
@@ -468,22 +468,22 @@ export const BatchDispatch: React.FC = () => {
             {result ? (
               <div className="space-y-3 font-mono text-xs">
                 <div className="p-2.5 bg-[#07070A] border border-zinc-800">
-                  <div className="text-[10px] text-zinc-500 uppercase">Simulated Annealing</div>
+                  <div className="text-xs text-zinc-500 uppercase">Simulated Annealing</div>
                   <div className="text-lg font-bold text-[#FFB81C] mt-0.5">
                     ₹{result.totalAnnealingCost}
                   </div>
-                  <div className="text-[10px] text-zinc-400 mt-1">
+                  <div className="text-xs text-zinc-400 mt-1">
                     Sweeps: {result.annealingSweeps} · Time: {result.computationTimeMs}ms
                   </div>
                 </div>
 
                 {result.exactSolverUsed ? (
                   <div className="p-2.5 bg-[#07070A] border border-zinc-800">
-                    <div className="text-[10px] text-zinc-500 uppercase">Hungarian Exact Optimum</div>
+                    <div className="text-xs text-zinc-500 uppercase">Hungarian Exact Optimum</div>
                     <div className="text-lg font-bold text-emerald-400 mt-0.5">
                       ₹{result.exactCost}
                     </div>
-                    <div className="text-[11px] font-semibold mt-1 flex items-center justify-between">
+                    <div className="text-xs font-semibold mt-1 flex items-center justify-between">
                       <span className="text-zinc-400">Optimality Gap:</span>
                       <span
                         className={
@@ -497,7 +497,7 @@ export const BatchDispatch: React.FC = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="p-2.5 bg-[#07070A] border border-zinc-800 text-[11px] text-zinc-400 leading-relaxed">
+                  <div className="p-2.5 bg-[#07070A] border border-zinc-800 text-xs text-zinc-400 leading-relaxed">
                     <span className="text-zinc-300 font-semibold">Exact Check Skipped:</span>
                     <p className="mt-1 text-zinc-500">
                       Permutation solver scales as O(N!). For N &gt; 6, exact verification is omitted to prevent blocking.
@@ -545,7 +545,7 @@ export const BatchDispatch: React.FC = () => {
                   </svg>
                 </div>
 
-                <div className="flex justify-between items-center text-[10px] font-mono text-zinc-500 mt-2">
+                <div className="flex justify-between items-center text-xs font-mono text-zinc-500 mt-2">
                   <span>Sweep 1 (T=80)</span>
                   <span className="text-[#5EE6FF]">Ground State (T={result?.finalTemperature})</span>
                 </div>
@@ -586,7 +586,7 @@ export const BatchDispatch: React.FC = () => {
               </code>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 text-[11px] text-zinc-400">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 text-xs text-zinc-400">
               <div>
                 <span className="text-white font-semibold">1. Linear Objective (c[i,j]):</span>
                 <p className="mt-1">
@@ -607,7 +607,7 @@ export const BatchDispatch: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-2 text-zinc-500 text-[10px] border-t border-zinc-900">
+            <div className="pt-2 text-zinc-500 text-xs border-t border-zinc-900">
               Note: This engine currently executes via classical Metropolis-Hastings Markov Chain Monte Carlo with geometric temperature cooling. The formulation is directly compatible with future physical quantum annealing processors (such as D-Wave Advantage) via minor embedding.
             </div>
           </div>

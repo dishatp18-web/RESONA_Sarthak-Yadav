@@ -189,7 +189,7 @@ export const DemoControls: React.FC = () => {
               </Badge>
             </div>
 
-            <p className="text-[11px] text-[#A7A29A] font-sans leading-relaxed">
+            <p className="text-xs text-[#A7A29A] font-sans leading-relaxed">
               Use these shortcuts during demo presentation to trigger multi-party state machine events and verify algorithmic integrity:
             </p>
 
@@ -212,7 +212,7 @@ export const DemoControls: React.FC = () => {
                         type: next ? 'fair' : 'info',
                       });
                     }}
-                    className={`px-2.5 py-1 rounded text-[10px] font-heading font-bold uppercase cursor-pointer border transition ${
+                    className={`px-2.5 py-1 rounded text-xs font-heading font-bold uppercase cursor-pointer border transition ${
                       simulatedGpsActive
                         ? 'bg-[#5EE6FF] text-black border-[#5EE6FF] shadow-[0_0_10px_#5EE6FF]'
                         : 'bg-[#151821] text-[#A7A29A] border-[#2A2E3A] hover:text-white'
@@ -222,9 +222,9 @@ export const DemoControls: React.FC = () => {
                   </button>
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] font-sans text-[#A7A29A] pt-1 border-t border-[#2A2E3A]">
+                <div className="flex items-center justify-between text-xs font-sans text-[#A7A29A] pt-1 border-t border-[#2A2E3A]">
                   <span>Time-scale speed:</span>
-                  <div className="flex items-center gap-1.5 font-heading text-[10px] uppercase font-bold">
+                  <div className="flex items-center gap-1.5 font-heading text-xs uppercase font-bold">
                     <button
                       type="button"
                       onClick={() => setTimeScale10x(false)}
@@ -258,7 +258,7 @@ export const DemoControls: React.FC = () => {
                     <Zap className="w-3.5 h-3.5 text-[#FFB81C]" />
                     <span>Simulate Worker Counter-Offer</span>
                   </div>
-                  <p className="text-[10px] text-[#A7A29A] font-sans mt-0.5">
+                  <p className="text-xs text-[#A7A29A] font-sans mt-0.5">
                     Submits an alternating counter on latest active job
                   </p>
                 </div>
@@ -276,7 +276,7 @@ export const DemoControls: React.FC = () => {
                     <FastForward className="w-3.5 h-3.5 text-[#5EE6FF]" />
                     <span>Fast-Forward Complete Job</span>
                   </div>
-                  <p className="text-[10px] text-[#A7A29A] font-sans mt-0.5">
+                  <p className="text-xs text-[#A7A29A] font-sans mt-0.5">
                     Request &rarr; Accept &rarr; Start &rarr; Complete &rarr; Rate 5★ &rarr; Recompute
                   </p>
                 </div>
@@ -294,7 +294,7 @@ export const DemoControls: React.FC = () => {
                     <ShieldAlert className="w-3.5 h-3.5 text-[#FF5C6C]" />
                     <span>Test Anti-Gaming (₹3,500 Outlier)</span>
                   </div>
-                  <p className="text-[10px] text-[#A7A29A] font-sans mt-0.5">
+                  <p className="text-xs text-[#A7A29A] font-sans mt-0.5">
                     Demonstrates IQR outlier filter protecting fair band
                   </p>
                 </div>
@@ -312,7 +312,7 @@ export const DemoControls: React.FC = () => {
                     <RotateCcw className="w-3.5 h-3.5" />
                     <span>Pristine Database Reset</span>
                   </div>
-                  <p className="text-[10px] text-[#6F6B65] font-sans mt-0.5">
+                  <p className="text-xs text-[#A7A29A] font-sans mt-0.5">
                     Wipes state and re-seeds with canonical demo records
                   </p>
                 </div>

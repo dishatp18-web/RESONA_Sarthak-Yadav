@@ -1,151 +1,151 @@
-# FairFix: Hyperlocal On-Demand Blue-Collar Services Platform
+# FairFix: Hyperlocal Blue-Collar Services with Live Fair-Price Band
 
-**Design Architecture: Mark III Forge**  
-*Metallic Cockpit Theme &bull; Real-Time Telemetry &bull; Live Price-Band Anti-Gaming*
+FairFix is a full-stack, hyper-local on-demand home services platform engineered for urban Indian micro-markets (seeded with Bengaluru neighborhoods: Koramangala, HSR Layout, Indiranagar, Jayanagar, and Whitefield).
 
-FairFix is a full-stack, hyper-local on-demand blue-collar services marketplace tailored for urban centers (seeded with Bengaluru neighborhoods: Koramangala, HSR Layout, Indiranagar, Jayanagar, and Whitefield). It solves the dual crises of price gouging and worker exploitation through an automated, dynamic **fair-price band engine**, strict **worker verification workflows**, **live GPS tracking with privacy safeguards**, and a **quantum-inspired QUBO batch dispatch engine**.
+It eliminates arbitrary price-gouging and exploitative aggregator commissions (25–30%) through a transparent, algorithmic **fair-price band engine**, a **server-enforced 3-round negotiation protocol**, a **7-state job lifecycle with privacy-first contact masking**, and a **quantum-inspired QUBO batch dispatch engine**.
 
 ---
 
-## 1. System Architecture
+## 1. System Architecture Diagram
 
-```mermaid
-graph TD
-    subgraph Client [React 19 + Vite Frontend - Mark III Forge]
-        UI_Cust[Customer Experience: Booking & Negotiation]
-        UI_Work[Worker Experience: Job Queue, Counter-Offers & GPS Broadcast]
-        UI_Band[Fair-Price Explorer & IQR Gauge]
-        UI_Admin[Admin Operations Console: Verification & Safety]
-        UI_Dispatch[QUBO Batch Dispatch & Energy Trace]
-        UI_Lab[Concept Lab: Roadmap & Hardware Blueprints]
-    end
-
-    subgraph Backend [Node.js + Express API]
-        API_Band[/api/band: IQR Outlier Filter & Dampener/]
-        API_Job[/api/jobs: 7-State FSM Engine/]
-        API_Offer[/api/offers: 3-Round Alternating Negotiation/]
-        API_Track[/api/tracking: Alpha Smoothing & 100m Geofence/]
-        API_Admin[/api/admin: Verification, Flagging & Incidents/]
-        API_Dispatch[/api/dispatch: Simulated Annealing & Hungarian Benchmark/]
-    end
-
-    subgraph Data [Embedded Storage & Seed Data]
-        DB[(SQLite fairfix.sqlite)]
-        DocStorage[(Local Document Storage: /uploads)]
-    end
-
-    UI_Cust -->|REST| API_Job
-    UI_Cust -->|REST| API_Offer
-    UI_Work -->|Location Stream| API_Track
-    UI_Admin -->|Approve/Reject| API_Admin
-    UI_Dispatch -->|Solve QUBO| API_Dispatch
-    API_Band --> DB
-    API_Job --> DB
-    API_Offer --> DB
-    API_Track --> DB
-    API_Admin --> DB
-    API_Admin --> DocStorage
+```
++-----------------------------------------------------------------------------------+
+|                        REACT 19 + VITE FRONTEND (PORT 3000)                       |
+|                                                                                   |
+|  +--------------------+  +--------------------+  +--------------------+           |
+|  |   Customer View    |  |    Worker View     |  | Fair-Price Monitor |           |
+|  | 4-Step Stepper &   |  | Job Dispatch Radar |  | Live Band Gauge &  |           |
+|  | Negotiation Thread |  | Rate Setup & Doc   |  | IQR Outlier Pruner |           |
+|  +--------------------+  +--------------------+  +--------------------+           |
+|            |                        |                       |                     |
+|  +--------------------+  +--------------------+  +--------------------+           |
+|  |  Admin Ops Console |  |   Batch Dispatch   |  |    Concept Lab     |           |
+|  | Verif, Incidents,  |  | Simulated Anneal   |  | Non-interactive    |           |
+|  | & Auto-Flag Queue  |  | vs Exact Hungarian |  | Roadmap Blueprints |           |
+|  +--------------------+  +--------------------+  +--------------------+           |
++-----------------------------------------------------------------------------------+
+                                         |
+                                         | REST APIs (/api/*)
+                                         v
++-----------------------------------------------------------------------------------+
+|                           EXPRESS API SERVER (server.ts)                          |
+|                                                                                   |
+|  * /api/price-band          IQR 1.5x filter, 25/50/75 percentiles, 10km radius    |
+|  * /api/jobs                7-state FSM (requested->negotiating->accepted...)     |
+|  * /api/jobs/:id/offer      3-round alternating negotiation protocol              |
+|  * /api/tracking/:id        Coarse 500m grid, 20-pt FIFO cache, 100m geofence     |
+|  * /api/safety/incident     High-priority safety queue + 112 emergency notice     |
+|  * /api/dispatch/batch      QUBO Ising formulation + Simulated Annealing          |
+|  * /api/admin/*             Worker verification, 3-customer auto-flagging         |
++-----------------------------------------------------------------------------------+
+                                         |
+                                         v
++-----------------------------------------------------------------------------------+
+|                     DATA LAYER & CANONICAL DEMO SEED                              |
+|                                                                                   |
+|  * SQLite Engine: Node.js node:sqlite (zero external C++ binary dependency)       |
+|  * Canonical Dataset: 8 customers, 12 workers, 1 admin, 66 historical jobs        |
+|  * Document Storage: /uploads (JPG/PNG/PDF <= 5MB with randomized filenames)      |
++-----------------------------------------------------------------------------------+
 ```
 
 ---
 
-## 2. Real vs. Stubbed Capabilities (Engineering Truth)
+## 2. Engineering Truth: Real vs. Simulated vs. Concept
 
-To uphold absolute technical honesty and transparency:
+FairFix adheres strictly to the **Honesty Rule**: capabilities are accurately labelled without exaggerated speedup claims, fake hardware claims, or simulated metrics presented as production telemetry.
 
-| Component | Status | Real Implementation Details |
+| Feature | Category | Implementation Reality |
 | :--- | :--- | :--- |
-| **IQR Fair-Price Band Engine** | **REAL** | Computes 25th/75th percentiles from real completed jobs. Filters outliers beyond $1.5 \times \text{IQR}$. Clamps price band shift to $\le 10\%$ per rated job. |
-| **Negotiation State Machine** | **REAL** | Enforces strict alternating turn-taking, 3-round maximum limit, out-of-turn blocking, auto-cancellation on round 3 exhaustion, and contact unmasking only upon acceptance. |
-| **Document Upload & Admin Queue** | **REAL** | Multer upload validation (JPG, PNG, PDF max 5MB). Admin review modal with approval, rejection with logged reason, and clear error feedback. |
-| **3-Customer Auto-Flagging** | **REAL** | Evaluates reports across distinct `reporter_id` customers. 3 distinct customer reports trigger `is_flagged = 1`. Flagged workers rank strictly last in customer discovery. |
-| **Safety Incidents & Emergency** | **REAL** | Customer safety incident dispatch with active status tracking and GPS incident logging. |
-| **Public Trip Share Link** | **REAL** | Secure tokenized tracking view (`/track/:token`) for third parties with automatic link expiration on job completion. |
-| **Live Location Tracking** | **REAL** | HTML5 `watchPosition` GPS ingestion, accuracy filter ($>100\text{m}$ discarded), exponential smoothing ($\alpha = 0.4$), 20-point FIFO cache, and 100m geofence arrival detection. |
-| **Pre-Acceptance Privacy Grid** | **REAL** | Truncates worker coordinates to a 500m coarse grid prior to job acceptance, transitioning to exact coordinates only after acceptance. |
-| **Quantum-Inspired Batch Dispatch** | **REAL (Classical)** | Classical simulated annealing on an Ising/QUBO Hamiltonian with temperature cooling and 2-opt swaps. Exact Hungarian permutation solver benchmark for $N \le 6$. **(Not run on quantum hardware; no quantum speedup claimed)**. |
-| **Concept Lab (D-Wave Hardware, WhatsApp Bot, BLE Wayfinding)** | **STUBBED / ROADMAP** | Strictly non-interactive conceptual blueprint cards with hatched borders, "CONCEPT, NOT IMPLEMENTED" chips, and disabled buttons. |
+| **Fair-Price Band Engine** | **REAL** | Computes 25th ($Q_1$), 50th (Median), and 75th ($Q_3$) percentiles from completed local jobs within 10 km. Filters outliers exceeding $1.5 \times \text{IQR}$. Clamps weekly band velocity to $\pm 10\%$. Enforces 2-job/week pair limit to prevent collusive rate rigging. |
+| **3-Round Negotiation Protocol** | **REAL** | Server validates alternating counter-offers, round numbering (1 to 3), and mutual acceptance. Reaching max rounds without agreement auto-cancels the job. |
+| **7-State Job Lifecycle** | **REAL** | Transitions guard `requested` &rarr; `negotiating` &rarr; `accepted` &rarr; `in_progress` &rarr; `completed` &rarr; `rated`. Out-of-order transitions are rejected with HTTP 400. |
+| **Phone Number Masking** | **REAL** | Numbers remain masked (`+91 ••••• •••••`) during request and negotiation, are unmasked only during active service (`accepted`, `in_progress`), and are **strictly re-masked** once the job is rated. |
+| **Worker Verification & Rejection** | **REAL** | Multer upload validation (JPG, PNG, PDF <= 5MB). Admin review with mandatory rejection reason logging and status reset on re-upload. |
+| **3-Distinct-Customer Auto-Flag** | **REAL** | Evaluates reports across distinct `reporter_id` customers. 3 distinct customer reports trigger `is_flagged = 1`. Flagged workers rank strictly last in customer discovery. |
+| **Safety / Incident Button** | **REAL** | Logs high-priority incident records with GPS coordinates to the Admin Operations Queue with explicit disclaimer: *"This does not contact emergency services. In an emergency dial 112."* |
+| **Live Location Tracking** | **REAL** | Browser HTML5 Geolocation ingestion, 500m coarse grid prior to acceptance, accuracy filter ($>100\text{m}$ discarded), 20-point FIFO cache, 100m geofence arrival prompt, and complete cache deletion upon job completion. |
+| **GPS Simulator Feeder** | **SIMULATED** | Interpolates 20 waypoints along route at 20 km/h. Carries a prominent, visible `SIMULATED GPS` chip across the map UI. |
+| **Quantum-Inspired Batch Dispatch** | **REAL (CLASSICAL)** | Solves a Quadratic Unconstrained Binary Optimization (QUBO) formulation using classical Metropolis-Hastings Simulated Annealing. Benchmarked against exact Hungarian algorithm ($N \le 6$). **Not run on quantum hardware; no quantum speedup claimed.** |
+| **Concept Lab (D-Wave, WhatsApp, BLE)** | **CONCEPT** | Strictly non-interactive conceptual blueprint cards with hatched borders, `CONCEPT, NOT IMPLEMENTED` chips, and disabled buttons. |
 
 ---
 
-## 3. Algorithmic Mechanics
+## 3. Mathematical Mechanics of the Fair-Price Band
 
-### A. Dynamic Fair-Price Band & Outlier Filter
-1. Historical completed jobs within category and search radius are fetched.
-2. The 25th percentile ($Q_1$), 50th percentile (Median), and 75th percentile ($Q_3$) are calculated.
-3. Outliers outside $[Q_1 - 1.5 \cdot \text{IQR}, Q_3 + 1.5 \cdot \text{IQR}]$ are removed.
-4. If valid sample size $\ge 5$, dampening restricts movement: $\text{Typical}_{\text{new}} \in [0.9 \cdot \text{Typical}_{\text{old}}, 1.1 \cdot \text{Typical}_{\text{old}}]$.
-5. Tiered confidence ratings: `high` ($\ge 10$ jobs), `medium` ($5-9$ jobs), `low (few jobs)` ($1-4$ jobs), or baseline `estimate` ($0$ jobs).
+The algorithm (`src/server/band.ts`) runs on completed jobs filtered by:
+1. **Category**: exact match (e.g. `plumbing`, `electrician`).
+2. **Geographic Proximity**: Haversine distance $\le 10\text{ km}$ from customer coordinates.
+3. **Time Window**: last 90 calendar days.
+4. **Anti-Gaming Pair Cap**: at most 2 completed jobs per customer-worker pair per 7-day rolling window to prevent artificial collusion.
 
-### B. Quantum-Inspired QUBO Formulation
-The batch assignment problem minimizes the objective Hamiltonian:
-$$H(x) = \sum_{i,j} c_{i,j} x_{i,j} + A \sum_i \left( \sum_j x_{i,j} - 1 \right)^2 + A \sum_j \sum_{i < k} x_{i,j} x_{k,j}$$
-Where:
-- $c_{i,j} = 1.0 \cdot \text{ETA} + 0.5 \cdot |\text{Offer} - \text{Rate}| + 8 \cdot (1 - \text{Rating}/5) + 6 \cdot \mathbb{I}(\text{Unverified})$.
-- Penalty $A = 1000$ enforces that every request receives exactly one worker and prevents worker double-booking.
-- Evaluated via classical Metropolis-Hastings Markov Chain Monte Carlo with geometric temperature cooling ($T_{\text{init}} = 80$, $\alpha = 0.95$).
+### Percentile & IQR Calculation
+Sorted prices: $P = [p_1, p_2, \dots, p_n]$:
+$$\text{Typical} = \text{Median}(P) = P_{50}$$
+$$Q_1 = P_{25}, \quad Q_3 = P_{75}$$
+$$\text{IQR} = Q_3 - Q_1$$
 
----
+### Tukey Fence Outlier Elimination
+Jobs with price $p < Q_1 - 1.5 \times \text{IQR}$ or $p > Q_3 + 1.5 \times \text{IQR}$ are pruned.
+The remaining valid transactions define the baseline band:
+$$\text{Low} = Q_{1,\text{valid}}, \quad \text{High} = Q_{3,\text{valid}}$$
 
-## 4. Risk Mitigations & Known Limitations
+### Velocity Dampening
+To prevent flash crashes or speculative surges, if at least 5 completed jobs exist, the band's typical value is clamped against the prior historical snapshot:
+$$\text{Typical}_{\text{clamped}} = \max\left(0.9 \times \text{Typical}_{\text{old}}, \min\left(1.1 \times \text{Typical}_{\text{old}}, \text{Typical}\right)\right)$$
 
-1. **Simulated Annealing Convergence on Large Batches:**
-   - *Limitation:* As matrix size exceeds $8 \times 12$ binary variables (96 spins), classical simulated annealing may require higher sweep counts or multiple random restarts to avoid metastable local minima.
-   - *Mitigation:* The engine defaults to 3 random restarts and warm starts with greedy feasibility before initiating MCMC exploration.
-2. **GPS Inaccuracy in Dense Urban High-Rises:**
-   - *Limitation:* Multipath reflections in Bengaluru high-rise societies can produce GPS fixes with $>100\text{m}$ error.
-   - *Mitigation:* Fixes with accuracy $>100\text{m}$ are discarded; valid fixes undergo exponential smoothing ($\alpha = 0.4$) to dampen trajectory jitter.
-3. **Cash-Only Payment Settlement:**
-   - *Limitation:* In-app digital escrow is currently not implemented; all jobs settle via cash on completion.
-   - *Mitigation:* Clear in-app warnings and direct unmasking ensure both parties verify cash amounts against the finalized agreed quote before job initiation.
+### Confidence Tiers
+- **High**: $\ge 10$ valid transactions.
+- **Medium**: $5 - 9$ valid transactions.
+- **Low (few jobs)**: $1 - 4$ valid transactions.
+- **Estimate**: $0$ jobs (uses default baseline).
 
 ---
 
-## 5. Five-Slide Pitch Deck Text
+## 4. Local Setup & Execution Guide
 
-### Slide 1: The Urban Blue-Collar Crisis
-- **Headline:** The Broken Trust in Local Home Services.
-- **Problem:** Customers face erratic 2x-3x price gouging during emergencies; gig workers face predatory 20-30% aggregator platform commissions and opaque matching algorithms.
-- **Vision:** FairFix creates transparent, hyper-local marketplaces governed by live, tamper-resistant fair-price telemetry.
+### Prerequisites
+- Node.js 22.x LTS (recommended for built-in `node:sqlite` support)
+- npm 10.x or higher
 
-### Slide 2: The Fair-Price Band Engine
-- **Headline:** Price Discovery Driven by Math, Not Aggregator Greed.
-- **Mechanism:** Completed neighborhood jobs continuously calculate real-time Interquartile Range (IQR) pricing bands with 1.5x outlier rejection.
-- **Impact:** Eliminates arbitrary surge pricing while guaranteeing workers compensation within fair market tolerance.
-
-### Slide 3: Two-Sided Trust & Safety Architecture
-- **Headline:** Verification, Privacy & Accountability by Design.
-- **Worker Verification:** Admin queue with Aadhaar / trade certificate inspection.
-- **Community Shield:** 3 distinct customer reports automatically flag fraudulent workers, relegating them to the bottom of discovery queues.
-- **Real-Time Safety:** Live GPS tracking with 500m pre-acceptance privacy masking and emergency incident broadcast.
-
-### Slide 4: Optimization: Quantum-Inspired QUBO Dispatch
-- **Headline:** Algorithmic Hyper-Local Batch Matching.
-- **Technology:** Formulates city-scale multi-worker assignment as a Quadratic Unconstrained Binary Optimization (QUBO) problem.
-- **Execution:** Solved classically via simulated annealing with 2-opt swaps; benchmarked against exact Hungarian algorithm ($N \le 6$) with zero optimality gap on tested small batches.
-- **Future Ready:** Formulated for seamless physical embedding onto quantum annealing processors (e.g. D-Wave Advantage).
-
-### Slide 5: The Business & Roadmap
-- **Headline:** Scalable, Community-First Unit Economics.
-- **Monetization:** Flat ₹15 platform booking fee per completed transaction (vs. predatory 25% aggregator cuts).
-- **Roadmap:** Voice-first WhatsApp onboarding for vernacular workers, BLE wayfinding for gated apartment complexes, and physical QPU deployment.
-
----
-
-## 6. Verification & Test Suite Execution
-
-All unit and integration tests run directly via Node.js / `tsx`:
-
+### Step-by-Step Commands
 ```bash
-# Run all test suites
-npx tsx test/band.test.ts
-npx tsx test/negotiation.test.ts
-npx tsx test/state_machine.test.ts
-npx tsx test/step_b.test.ts
-npx tsx test/step_c.test.ts
-npx tsx test/quantum_dispatch.test.ts
+# 1. Clone repository
+git clone https://github.com/dishatp18-web/RESONA_Sarthak-Yadav.git
+cd RESONA_Sarthak-Yadav
 
-# Run typecheck & build compilation
+# 2. Install dependencies (clean install with zero flags)
+npm install
+
+# 3. Seed canonical demo database (8 customers, 12 workers, 66 completed jobs)
+npm run seed
+
+# 4. Run the comprehensive test suite (all 6 test suites)
+npm test
+
+# 5. Typecheck & build production bundle
 npm run lint
 npm run build
+
+# 6. Start the development server
+npm run dev
 ```
+
+Server binds to `http://localhost:3000`.
+
+---
+
+## 5. Automated Test Coverage Summary
+
+Running `npm test` executes `test/run_all.ts`, running all 6 test suites:
+
+| Suite | File | Assertions / Cases Covered | Status |
+| :--- | :--- | :--- | :--- |
+| **Band Algorithm** | `test/band.test.ts` | IQR outlier pruning, cook/maid low confidence tier, appliance zero-job baseline, comparison chips, Job ID title formatting (`Job 102`), below-typical gold caution chip, 60s recompute timestamp boundary. | **PASSED** |
+| **State Machine** | `test/state_machine.test.ts` | Full lifecycle (`requested` &rarr; `accepted` &rarr; `in_progress` &rarr; `completed` &rarr; `rated`), worker job count increment, rating recompute trigger, ₹4,500 outlier rejection, phone masking lifecycle across all states. | **PASSED** |
+| **Negotiation Protocol** | `test/negotiation.test.ts` | Alternating turns, customer & worker counter-offers, round 1 & 2 transitions, mutual acceptance price settlement, max round (3) auto-cancellation. | **PASSED** |
+| **Verification & Safety** | `test/step_b.test.ts` | Document rejection reason logging & clearance on approval, 3-distinct-customer auto-flagging threshold, flagged worker rank demotion, safety incident creation, trip share token expiration. | **PASSED** |
+| **Live Location Tracking** | `test/step_c.test.ts` | Accuracy filter ($>100\text{m}$ dropped), 20-point FIFO cache eviction, pre-acceptance 500m coarse grid, auto-deletion on completion, 100m geofence detection, speed clamping ($10 - 40\text{ km/h}$). | **PASSED** |
+| **Quantum-Inspired Dispatch** | `test/quantum_dispatch.test.ts` | Cost matrix construction, category gating, QUBO energy Hamiltonian, exact Hungarian solver comparison, 20-instance benchmark confirming $\ge 80\%$ optimality vs exact solver. | **PASSED** |
+
+**Total Result**: 6 / 6 Suites Passed 100% in ~8.8 seconds.

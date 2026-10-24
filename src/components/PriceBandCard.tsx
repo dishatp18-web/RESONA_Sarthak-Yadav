@@ -31,20 +31,20 @@ export const PriceBandCard: React.FC<PriceBandCardProps> = ({
     switch (band.confidence) {
       case 'high':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+          <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
             <CheckCircle className="w-3 h-3" /> High Confidence ({band.jobCount} jobs)
           </span>
         );
       case 'low (few jobs)':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
+          <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
             <AlertTriangle className="w-3 h-3" /> Low Confidence ({band.jobCount} jobs)
           </span>
         );
       case 'estimate':
       default:
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">
+          <span className="inline-flex items-center gap-1 text-xs font-semibold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">
             <Info className="w-3 h-3" /> Baseline Estimate
           </span>
         );
@@ -58,7 +58,7 @@ export const PriceBandCard: React.FC<PriceBandCardProps> = ({
           <div className="flex items-center gap-1.5 font-semibold text-slate-200">
             <TrendingUp className="w-3.5 h-3.5 text-amber-400" />
             <span>Fair-Price Band</span>
-            <span className="text-[10px] text-indigo-400 bg-indigo-500/10 px-1.5 py-0.2 rounded border border-indigo-500/20">
+            <span className="text-xs text-indigo-400 bg-indigo-500/10 px-1.5 py-0.2 rounded border border-indigo-500/20">
               Demo data
             </span>
           </div>
@@ -90,11 +90,11 @@ export const PriceBandCard: React.FC<PriceBandCardProps> = ({
           <div>
             <h4 className="font-bold text-sm text-white flex items-center gap-1.5">
               Live Fair-Price Band
-              <span className="text-[10px] font-normal uppercase tracking-wider text-indigo-300 bg-indigo-500/20 px-1.5 py-0.2 rounded border border-indigo-400/30">
+              <span className="text-xs font-normal uppercase tracking-wider text-indigo-300 bg-indigo-500/20 px-1.5 py-0.2 rounded border border-indigo-400/30">
                 Demo data
               </span>
             </h4>
-            <p className="text-[11px] text-slate-400 capitalize">{band.category.replace('_', ' & ')} near you</p>
+            <p className="text-xs text-slate-400 capitalize">{band.category.replace('_', ' & ')} near you</p>
           </div>
         </div>
         {confidenceBadge()}
@@ -127,7 +127,7 @@ export const PriceBandCard: React.FC<PriceBandCardProps> = ({
             </div>
             <div className="h-full bg-indigo-500/30 w-1/4" title="High percentile" />
           </div>
-          <div className="flex justify-between text-[10px] text-slate-500 mt-1 font-mono">
+          <div className="flex justify-between text-xs text-slate-500 mt-1 font-mono">
             <span>₹{band.low} (25th%)</span>
             <span className="text-amber-400 font-semibold">Typical (50th%)</span>
             <span>₹{band.high} (75th%)</span>
@@ -143,7 +143,7 @@ export const PriceBandCard: React.FC<PriceBandCardProps> = ({
               <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
               <div>
                 <span className="font-semibold text-emerald-300">{comparison.label}</span>
-                <span className="block text-[11px] text-emerald-400/90 mt-0.5">
+                <span className="block text-xs text-emerald-400/90 mt-0.5">
                   Offers within this band have 88% higher acceptance rates.
                 </span>
               </div>
@@ -154,11 +154,11 @@ export const PriceBandCard: React.FC<PriceBandCardProps> = ({
               <div>
                 <div className="flex items-center gap-1.5 font-semibold text-amber-300">
                   <span>{comparison.label}</span>
-                  <span className="text-[10px] uppercase tracking-wide bg-amber-500/30 text-amber-200 px-1.5 py-0.2 rounded">
+                  <span className="text-xs uppercase tracking-wide bg-amber-500/30 text-amber-200 px-1.5 py-0.2 rounded">
                     Notice
                   </span>
                 </div>
-                <p className="text-[11px] text-amber-300/90 mt-0.5">
+                <p className="text-xs text-amber-300/90 mt-0.5">
                   {comparison.warning || 'Your offer is below typical market rate. Workers may counter-offer or take longer to respond.'}
                 </p>
               </div>
@@ -169,11 +169,11 @@ export const PriceBandCard: React.FC<PriceBandCardProps> = ({
               <div>
                 <div className="flex items-center gap-1.5 font-semibold text-purple-300">
                   <span>{comparison.label}</span>
-                  <span className="text-[10px] uppercase tracking-wide bg-purple-500/30 text-purple-200 px-1.5 py-0.2 rounded">
+                  <span className="text-xs uppercase tracking-wide bg-purple-500/30 text-purple-200 px-1.5 py-0.2 rounded">
                     Above Band
                   </span>
                 </div>
-                <p className="text-[11px] text-purple-300/90 mt-0.5">
+                <p className="text-xs text-purple-300/90 mt-0.5">
                   {comparison.warning || 'Offer is higher than typical fair range. You can proceed, but may be paying a premium.'}
                 </p>
               </div>
@@ -183,11 +183,11 @@ export const PriceBandCard: React.FC<PriceBandCardProps> = ({
       )}
 
       {/* Explanation string & Anti-gaming disclosure */}
-      <div className="text-[11px] text-slate-400 flex items-start gap-1.5 bg-slate-950/40 p-2.5 rounded-lg border border-slate-800">
+      <div className="text-xs text-slate-400 flex items-start gap-1.5 bg-slate-950/40 p-2.5 rounded-lg border border-slate-800">
         <Info className="w-3.5 h-3.5 text-indigo-400 shrink-0 mt-0.5" />
         <div className="space-y-0.5">
           <p className="text-slate-300">{band.explanation}</p>
-          <p className="text-[10px] text-slate-500">
+          <p className="text-xs text-slate-500">
             Outliers rejected using 1.5&times;IQR rule &bull; Max 2 jobs/pair/week anti-gaming cap &bull; Max &plusmn;10% weekly velocity.
           </p>
         </div>

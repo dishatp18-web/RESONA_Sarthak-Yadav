@@ -137,11 +137,11 @@ export const PublicTracker: React.FC<PublicTrackerProps> = ({ token, onBackToApp
         <HudPanel variant="default" className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-[#07070A] rounded-xl border border-[#2A2E3A]">
             <div>
-              <span className="text-[10px] font-heading font-bold uppercase tracking-wider text-[#A7A29A]">Assigned Worker</span>
+              <span className="text-xs font-heading font-bold uppercase tracking-wider text-[#A7A29A]">Assigned Worker</span>
               <p className="font-heading font-bold text-sm text-white uppercase">{job.worker_name || 'En Route Worker'}</p>
             </div>
             <div>
-              <span className="text-[10px] font-heading font-bold uppercase tracking-wider text-[#A7A29A]">Customer</span>
+              <span className="text-xs font-heading font-bold uppercase tracking-wider text-[#A7A29A]">Customer</span>
               <p className="font-heading font-bold text-sm text-white">{job.customer_name || 'Verified Customer'}</p>
             </div>
           </div>
@@ -153,7 +153,7 @@ export const PublicTracker: React.FC<PublicTrackerProps> = ({ token, onBackToApp
                 <Navigation className="w-4 h-4" />
                 Live GPS Coordinates
               </span>
-              <span className="text-[10px] text-[#A7A29A]">
+              <span className="text-xs text-[#A7A29A]">
                 {latestPoint ? `Updated ${new Date(latestPoint.ts).toLocaleTimeString()}` : 'Fix pending...'}
               </span>
             </div>
@@ -180,7 +180,7 @@ export const PublicTracker: React.FC<PublicTrackerProps> = ({ token, onBackToApp
       </div>
 
       {/* Footer */}
-      <div className="max-w-3xl mx-auto w-full pt-6 text-center text-xs text-[#6F6B65] font-mono">
+      <div className="max-w-3xl mx-auto w-full pt-6 text-center text-xs text-[#A7A29A] font-mono">
         FairFix Bengaluru &bull; Read-Only Demo Tracking Link &bull; Expires on job completion
       </div>
     </div>

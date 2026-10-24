@@ -187,7 +187,7 @@ export const FairPriceExplorer: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] uppercase font-heading font-bold tracking-wider px-2 py-0.5 rounded bg-[#FFB81C]/15 text-[#FFD65A] border border-[#FFB81C]/30">
+              <span className="text-xs uppercase font-heading font-bold tracking-wider px-2 py-0.5 rounded bg-[#FFB81C]/15 text-[#FFD65A] border border-[#FFB81C]/30">
                 Core Differentiator
               </span>
               <Badge variant="neutral" size="sm">
@@ -230,7 +230,7 @@ export const FairPriceExplorer: React.FC = () => {
                   >
                     <span>{cat.name}</span>
                     {cat.id === 'cook_maid' && (
-                      <span className="block text-[9px] font-mono text-[#FFB81C] mt-0.5">
+                      <span className="block text-xs font-mono text-[#FFB81C] mt-0.5">
                         (3 jobs: Low Conf)
                       </span>
                     )}
@@ -260,7 +260,7 @@ export const FairPriceExplorer: React.FC = () => {
                     }`}
                   >
                     <p className="truncate">{n.name}</p>
-                    <p className="text-[10px] text-[#A7A29A] font-mono mt-0.5">{n.areaKey}</p>
+                    <p className="text-xs text-[#A7A29A] font-mono mt-0.5">{n.areaKey}</p>
                   </button>
                 );
               })}
@@ -318,7 +318,7 @@ export const FairPriceExplorer: React.FC = () => {
                   Completed Job Transaction Sparkline (Last 10 Jobs)
                 </h4>
               </div>
-              <span className="text-[11px] font-mono text-[#A7A29A]">
+              <span className="text-xs font-mono text-[#A7A29A]">
                 Red points = Outliers Pruned
               </span>
             </div>
@@ -348,10 +348,10 @@ export const FairPriceExplorer: React.FC = () => {
                         <AlertTriangle className="w-4 h-4 text-[#FF5C6C] shrink-0" />
                         <div>
                           <span className="font-bold text-white">{formatINR(pt.price)}</span>
-                          <span className="text-[#A7A29A] text-[11px] ml-2">Job {pt.id}</span>
+                          <span className="text-[#A7A29A] text-xs ml-2">Job {String(pt.id).replace(/^job_/, '')}</span>
                         </div>
                       </div>
-                      <span className="text-[11px] text-[#FF5C6C]">
+                      <span className="text-xs text-[#FF5C6C]">
                         {pt.reason}
                       </span>
                     </div>
@@ -373,28 +373,28 @@ export const FairPriceExplorer: React.FC = () => {
             <div className="space-y-3 text-xs text-[#A7A29A] font-sans">
               <div className="p-3 bg-[#07070A] rounded-lg border border-[#2A2E3A]">
                 <span className="text-white font-heading font-bold uppercase tracking-wider block mb-0.5">1. IQR Rule</span>
-                <p className="text-[11px] leading-relaxed">
+                <p className="text-xs leading-relaxed">
                   Drops values &lt; Q1 - 1.5&times;IQR or &gt; Q3 + 1.5&times;IQR. Deliberate extreme quotes are filtered automatically.
                 </p>
               </div>
 
               <div className="p-3 bg-[#07070A] rounded-lg border border-[#2A2E3A]">
                 <span className="text-white font-heading font-bold uppercase tracking-wider block mb-0.5">2. Anti-Gaming Pair Cap</span>
-                <p className="text-[11px] leading-relaxed">
+                <p className="text-xs leading-relaxed">
                   Worker-customer pairs contribute at most 2 completed jobs per 7-day rolling window to stop collusive artificial rate surges.
                 </p>
               </div>
 
               <div className="p-3 bg-[#07070A] rounded-lg border border-[#2A2E3A]">
                 <span className="text-white font-heading font-bold uppercase tracking-wider block mb-0.5">3. 10% Weekly Velocity Bound</span>
-                <p className="text-[11px] leading-relaxed">
+                <p className="text-xs leading-relaxed">
                   Bands may not fluctuate more than 10% week-over-week against recent snapshots, ensuring market predictability.
                 </p>
               </div>
 
               <div className="p-3 bg-[#07070A] rounded-lg border border-[#2A2E3A]">
                 <span className="text-white font-heading font-bold uppercase tracking-wider block mb-0.5">4. Sparse Fallback Tier</span>
-                <p className="text-[11px] leading-relaxed">
+                <p className="text-xs leading-relaxed">
                   Categories with &lt;5 jobs are explicitly flagged as &ldquo;Low: Few jobs&rdquo; (test with Cook &amp; Maid, which has 3 jobs).
                 </p>
               </div>

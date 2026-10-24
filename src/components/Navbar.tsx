@@ -63,7 +63,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
   return (
     <header className="sticky top-0 z-40 bg-[#07070A]/95 border-b border-[rgba(255,184,28,0.2)] text-white backdrop-blur-md">
       {/* Top Micro Strip */}
-      <div className="bg-[#0E1016] border-b border-[#2A2E3A] px-3 sm:px-6 py-1 text-[11px] flex items-center justify-between text-[#A7A29A]">
+      <div className="bg-[#0E1016] border-b border-[#2A2E3A] px-3 sm:px-6 py-1 text-xs flex items-center justify-between text-[#A7A29A]">
         <div className="flex items-center gap-2">
           <Badge variant="fair" size="sm">
             Demo Mode
@@ -73,7 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-[10px] font-mono text-[#A7A29A]">
+          <span className="text-xs font-mono text-[#A7A29A]">
             Payments: Cash on completion only
           </span>
         </div>
@@ -91,11 +91,11 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
           <div>
             <div className="flex items-center gap-1.5">
               <span className="font-heading font-bold text-base tracking-wider text-[#F4F1EC]">FAIRFIX</span>
-              <span className="text-[9px] uppercase font-mono font-bold tracking-wider px-1.5 py-0.2 rounded bg-[#5EE6FF]/15 text-[#5EE6FF] border border-[#5EE6FF]/30">
+              <span className="text-xs uppercase font-mono font-bold tracking-wider px-1.5 py-0.2 rounded bg-[#5EE6FF]/15 text-[#5EE6FF] border border-[#5EE6FF]/30">
                 Live Band
               </span>
             </div>
-            <p className="text-[10px] text-[#A7A29A] -mt-0.5 hidden xs:block font-sans">Hyperlocal Blue-Collar Platform</p>
+            <p className="text-xs text-[#A7A29A] -mt-0.5 hidden xs:block font-sans">Hyperlocal Blue-Collar Platform</p>
           </div>
         </div>
 
@@ -131,7 +131,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
           {/* User Profile Card */}
           <div className="flex items-center gap-2 bg-[#0E1016] border border-[#2A2E3A] rounded-xl px-2.5 py-1 text-xs">
             {/* Avatar Initials */}
-            <div className="w-6 h-6 rounded bg-gradient-to-br from-[#8E0B16] to-[#D7261E] border border-[rgba(255,184,28,0.3)] flex items-center justify-center font-heading font-bold text-[11px] text-white shrink-0">
+            <div className="w-6 h-6 rounded bg-gradient-to-br from-[#8E0B16] to-[#D7261E] border border-[rgba(255,184,28,0.3)] flex items-center justify-center font-heading font-bold text-xs text-white shrink-0">
               {currentUser?.name.charAt(0)}
             </div>
 
@@ -224,12 +224,12 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab }) => 
                     {hideDemoControls ? (
                       <>
                         <Eye className="w-3.5 h-3.5 text-[#5EE6FF]" />
-                        <span>Show demo controls</span>
+                        <span>Exit Recording Mode</span>
                       </>
                     ) : (
                       <>
                         <EyeOff className="w-3.5 h-3.5 text-[#A7A29A]" />
-                        <span>Hide demo controls (recording mode)</span>
+                        <span>Recording Mode (Hide Demo Controls)</span>
                       </>
                     )}
                   </button>

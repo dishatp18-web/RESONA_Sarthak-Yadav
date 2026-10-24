@@ -199,7 +199,7 @@ export const WorkerView: React.FC = () => {
               <XCircle className="w-4 h-4 shrink-0" />
               <span>Account Suspended by Operations</span>
             </div>
-            <p className="text-[11px] text-[#A7A29A] font-sans">
+            <p className="text-xs text-[#A7A29A] font-sans">
               Your profile has been suspended by administration. You are temporarily hidden from customer searches.
             </p>
           </div>
@@ -211,7 +211,7 @@ export const WorkerView: React.FC = () => {
               <AlertTriangle className="w-4 h-4 shrink-0" />
               <span>Under Review Chip Active</span>
             </div>
-            <p className="text-[11px] text-[#A7A29A] font-sans">
+            <p className="text-xs text-[#A7A29A] font-sans">
               Account auto-flagged following 3 distinct customer reports. Your profile ranks last in matching until reviewed by an administrator.
             </p>
           </div>
@@ -224,7 +224,7 @@ export const WorkerView: React.FC = () => {
               <CheckCircle2 className="w-5 h-5 shrink-0" />
               <div>
                 <p className="font-heading font-bold text-white uppercase tracking-wider">Verified Worker Badge Active</p>
-                <p className="text-[11px] text-[#A7A29A] font-sans">
+                <p className="text-xs text-[#A7A29A] font-sans">
                   Approved credential. You receive top priority matching radar boost in customer searches.
                 </p>
               </div>
@@ -246,10 +246,10 @@ export const WorkerView: React.FC = () => {
                 Pending Review
               </Badge>
             </div>
-            <p className="text-[11px] text-[#A7A29A] font-sans">
+            <p className="text-xs text-[#A7A29A] font-sans">
               Trade document submitted and securely stored. Awaiting manual admin review.
             </p>
-            <div className="text-[10px] text-[#6F6B65] font-mono italic">
+            <div className="text-xs text-[#A7A29A] font-mono italic">
               Notice: Documents are reviewed manually by an admin. No automated ID check or government API is integrated.
             </div>
           </div>
@@ -267,7 +267,7 @@ export const WorkerView: React.FC = () => {
               </Badge>
             </div>
             {currentUser?.verification_reject_reason && (
-              <div className="p-2.5 bg-[#07070A] rounded-lg border border-[#FF5C6C]/30 text-[11px] text-[#F4F1EC]">
+              <div className="p-2.5 bg-[#07070A] rounded-lg border border-[#FF5C6C]/30 text-xs text-[#F4F1EC]">
                 <strong className="text-[#FF5C6C]">Admin Reason:</strong> {currentUser.verification_reject_reason}
               </div>
             )}
@@ -291,7 +291,7 @@ export const WorkerView: React.FC = () => {
                 Unverified
               </Badge>
             </div>
-            <p className="text-[11px] text-[#A7A29A] font-sans">
+            <p className="text-xs text-[#A7A29A] font-sans">
               Upload your trade certificate or government ID to earn the Verified badge and unlock priority customer matching.
             </p>
             <button
@@ -324,7 +324,7 @@ export const WorkerView: React.FC = () => {
               <p className="font-bold text-[#FFB81C]">
                 Security Notice: Mask the first 8 digits of any ID number before uploading.
               </p>
-              <p className="text-[11px] text-[#A7A29A]">
+              <p className="text-xs text-[#A7A29A]">
                 Never upload raw full ID numbers. Allowed formats: JPG, PNG, or PDF (max 5 MB).
               </p>
             </div>
@@ -351,7 +351,7 @@ export const WorkerView: React.FC = () => {
               <p className="text-xs text-[#5EE6FF] font-mono">{uploadSuccess}</p>
             )}
 
-            <div className="text-[10px] text-[#6F6B65] font-sans italic pt-1 border-t border-[#2A2E3A]">
+            <div className="text-xs text-[#A7A29A] font-sans italic pt-1 border-t border-[#2A2E3A]">
               Documents are reviewed manually by an admin. No automated ID check or government API is integrated.
             </div>
           </div>
@@ -402,7 +402,7 @@ export const WorkerView: React.FC = () => {
             <span className="text-xs font-heading uppercase tracking-wider font-bold block text-white">
               {available ? 'Online (Accepting Jobs)' : 'Offline (Paused)'}
             </span>
-            <span className="text-[11px] text-[#A7A29A] font-sans">
+            <span className="text-xs text-[#A7A29A] font-sans">
               {available ? 'Visible in radar' : 'Hidden from searches'}
             </span>
           </div>
@@ -413,7 +413,7 @@ export const WorkerView: React.FC = () => {
             className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200 shadow-md cursor-pointer ${
               available
                 ? 'bg-[#5EE6FF] text-[#07070A] shadow-[0_0_16px_#5EE6FF]'
-                : 'bg-[#151821] text-[#6F6B65] hover:bg-[#1C202B]'
+                : 'bg-[#151821] text-[#A7A29A] hover:bg-[#1C202B]'
             }`}
             title="Toggle Availability"
             aria-label="Toggle Availability"
@@ -432,7 +432,7 @@ export const WorkerView: React.FC = () => {
               Incoming Service Requests &amp; Negotiations ({activeNegotiations.length})
             </h2>
           </div>
-          <span className="text-[11px] font-mono text-[#5EE6FF]">
+          <span className="text-xs font-mono text-[#5EE6FF]">
             3s Real-Time Polling Active
           </span>
         </div>
@@ -475,13 +475,13 @@ export const WorkerView: React.FC = () => {
                         </Badge>
                       </div>
                       <p className="text-xs text-[#F4F1EC] mt-1 font-sans">{job.description}</p>
-                      <p className="text-[11px] text-[#A7A29A] mt-0.5">
+                      <p className="text-xs text-[#A7A29A] mt-0.5">
                         Customer: <strong className="text-white">{job.customer_name}</strong> &bull; {getCategoryLabel(job.category)}
                       </p>
                     </div>
 
                     <div className="text-right">
-                      <span className="text-[10px] uppercase font-heading font-bold text-[#A7A29A] block">
+                      <span className="text-xs uppercase font-heading font-bold text-[#A7A29A] block">
                         {isAccepted ? 'Agreed Price' : 'Offered Price'}
                       </span>
                       <span className="font-heading font-black text-lg text-white tabular-nums">
@@ -491,7 +491,7 @@ export const WorkerView: React.FC = () => {
                   </div>
 
                   <div className="mt-3 pt-3 border-t border-[#2A2E3A] flex items-center justify-between text-xs">
-                    <span className="font-mono text-[11px] text-[#FFD65A]">
+                    <span className="font-mono text-xs text-[#FFD65A]">
                       {job.status === 'in_progress'
                         ? 'Service in progress'
                         : job.status === 'completed' || job.status === 'rated'
@@ -533,7 +533,7 @@ export const WorkerView: React.FC = () => {
         <div className="lg:col-span-7 space-y-5">
           <HudPanel variant="default" className="space-y-4">
             <div>
-              <span className="text-[10px] font-heading font-bold uppercase tracking-wider text-[#FFB81C]">
+              <span className="text-xs font-heading font-bold uppercase tracking-wider text-[#FFB81C]">
                 Rate Self-Determination
               </span>
               <h2 className="font-heading text-lg font-black text-white tracking-wider uppercase mt-0.5">
@@ -586,23 +586,23 @@ export const WorkerView: React.FC = () => {
             {/* Operational Profile Details */}
             <div className="pt-4 border-t border-[#2A2E3A] space-y-2 text-xs">
               <h4 className="font-heading font-bold text-white uppercase tracking-wider">Operational Profile</h4>
-              <div className="grid grid-cols-2 gap-3 text-[11px]">
+              <div className="grid grid-cols-2 gap-3 text-xs">
                 <div className="p-2.5 bg-[#07070A] rounded-lg border border-[#2A2E3A]">
-                  <span className="block text-[#6F6B65] font-medium font-sans">Primary Trade</span>
+                  <span className="block text-[#A7A29A] font-medium font-sans">Primary Trade</span>
                   <span className="text-white font-heading font-bold uppercase">{getCategoryLabel(primaryCategory)}</span>
                 </div>
                 <div className="p-2.5 bg-[#07070A] rounded-lg border border-[#2A2E3A]">
-                  <span className="block text-[#6F6B65] font-medium font-sans">Service Radius</span>
+                  <span className="block text-[#A7A29A] font-medium font-sans">Service Radius</span>
                   <span className="text-white font-bold font-mono">{currentUser?.radius_km || 5} km</span>
                 </div>
                 <div className="p-2.5 bg-[#07070A] rounded-lg border border-[#2A2E3A]">
-                  <span className="block text-[#6F6B65] font-medium font-sans">Home Location</span>
+                  <span className="block text-[#A7A29A] font-medium font-sans">Home Location</span>
                   <span className="text-white font-bold font-mono">
                     {currentUser?.lat.toFixed(3)}, {currentUser?.lng.toFixed(3)}
                   </span>
                 </div>
                 <div className="p-2.5 bg-[#07070A] rounded-lg border border-[#2A2E3A]">
-                  <span className="block text-[#6F6B65] font-medium font-sans">Phone Number</span>
+                  <span className="block text-[#A7A29A] font-medium font-sans">Phone Number</span>
                   <span className="text-white font-mono">{currentUser?.phone}</span>
                 </div>
               </div>
@@ -624,7 +624,7 @@ export const WorkerView: React.FC = () => {
               <Info className="w-4 h-4 text-[#5EE6FF]" />
               Fair-Price Principles for Workers
             </h4>
-            <p className="text-[11px] leading-relaxed font-sans">
+            <p className="text-xs leading-relaxed font-sans">
               FairFix does not impose artificial rate caps on workers. If your rate falls outside the fair band, customers receive a non-blocking informational chip and can counter-offer freely during negotiation.
             </p>
           </HudPanel>

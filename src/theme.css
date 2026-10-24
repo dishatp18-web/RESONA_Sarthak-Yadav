@@ -1,6 +1,6 @@
 /**
  * FairFix "Mark III Forge" Design System Tokens
- * Dark metallic cockpit, deep red and warm gold armor, with cyan arc-reactor accents.
+ * Dark metallic cockpit, deep red and warm gold armor, with cyan live status accents.
  */
 :root {
   /* Surfaces & Text */
@@ -151,31 +151,10 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   transition: border-color 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1), transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* HudPanel: Clean metallic cockpit panel without stray edge chevrons */
 .hud-panel-brackets::before,
 .hud-panel-brackets::after {
-  content: '';
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  pointer-events: none;
-  z-index: 5;
-}
-
-/* Top-left & Bottom-right corner brackets */
-.hud-panel-brackets::before {
-  top: -1px;
-  left: -1px;
-  border-top: 1.5px solid var(--gold);
-  border-left: 1.5px solid var(--gold);
-  border-top-left-radius: 12px;
-}
-
-.hud-panel-brackets::after {
-  bottom: -1px;
-  right: -1px;
-  border-bottom: 1.5px solid var(--gold);
-  border-right: 1.5px solid var(--gold);
-  border-bottom-right-radius: 12px;
+  display: none;
 }
 
 .hud-panel:hover {

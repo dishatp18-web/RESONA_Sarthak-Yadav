@@ -185,7 +185,7 @@ export const MapPicker: React.FC<MapPickerProps> = ({
           <Popup>
             <div className="text-xs font-sans text-slate-100 p-1">
               <p className="font-heading font-bold text-[#FFD65A] mb-0.5 uppercase tracking-wider">Service Point</p>
-              <p className="text-[#A7A29A] text-[11px]">
+              <p className="text-[#A7A29A] text-xs">
                 {interactivePin ? 'Click map or drag pin to relocate' : 'Job request point'}
               </p>
             </div>
@@ -210,16 +210,16 @@ export const MapPicker: React.FC<MapPickerProps> = ({
                   <div className="flex items-center justify-between mb-1.5 pb-1 border-b border-[#2A2E3A]">
                     <span className="font-heading font-bold text-white">{w.name}</span>
                     {isVerified ? (
-                      <span className="text-[10px] bg-[#5EE6FF]/15 text-[#5EE6FF] px-1.5 py-0.2 rounded font-bold border border-[#5EE6FF]/30">
+                      <span className="text-xs bg-[#5EE6FF]/15 text-[#5EE6FF] px-1.5 py-0.2 rounded font-bold border border-[#5EE6FF]/30">
                         Verified
                       </span>
                     ) : (
-                      <span className="text-[10px] bg-white/10 text-[#A7A29A] px-1.5 py-0.2 rounded font-medium capitalize">
+                      <span className="text-xs bg-white/10 text-[#A7A29A] px-1.5 py-0.2 rounded font-medium capitalize">
                         {w.verification_status}
                       </span>
                     )}
                   </div>
-                  <div className="text-[11px] text-slate-300 space-y-1">
+                  <div className="text-xs text-slate-300 space-y-1">
                     <div>ETA: <strong className="text-[#5EE6FF] font-mono">{w.eta_label}</strong></div>
                     <div>Distance: {w.distance_km} km away</div>
                     <div>Rating: ★{w.rating_avg} ({w.rating_count} reviews)</div>
@@ -228,7 +228,7 @@ export const MapPicker: React.FC<MapPickerProps> = ({
                   {onSelectWorker && (
                     <button
                       onClick={() => onSelectWorker(w)}
-                      className="mt-2.5 w-full py-1.5 text-center bg-gradient-to-r from-[#8E0B16] to-[#D7261E] text-white rounded-lg font-heading font-bold text-[11px] uppercase tracking-wider transition cursor-pointer hover:brightness-110"
+                      className="mt-2.5 w-full py-1.5 text-center bg-gradient-to-r from-[#8E0B16] to-[#D7261E] text-white rounded-lg font-heading font-bold text-xs uppercase tracking-wider transition cursor-pointer hover:brightness-110"
                     >
                       Select Worker
                     </button>
@@ -242,7 +242,7 @@ export const MapPicker: React.FC<MapPickerProps> = ({
 
       {/* Map Helper overlay badge */}
       {interactivePin && (
-        <div className="absolute top-3 right-3 z-10 bg-[#0E1016]/95 border border-[rgba(255,184,28,0.3)] text-[#F4F1EC] text-[11px] font-heading uppercase tracking-wider px-3 py-1 rounded-lg pointer-events-none shadow-lg">
+        <div className="absolute top-3 right-3 z-10 bg-[#0E1016]/95 border border-[rgba(255,184,28,0.3)] text-[#F4F1EC] text-xs font-heading uppercase tracking-wider px-3 py-1 rounded-lg pointer-events-none shadow-lg">
           <span>Click map or drag pin to relocate</span>
         </div>
       )}

@@ -179,7 +179,7 @@ export const AdminPlaceholder: React.FC = () => {
             <Badge variant="neutral" size="sm">
               Demo data
             </Badge>
-            <span className="text-[10px] text-[#5EE6FF] font-mono flex items-center gap-1">
+            <span className="text-xs text-[#5EE6FF] font-mono flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-[#5EE6FF] animate-pulse" />
               Live 4s Polling
             </span>
@@ -208,7 +208,7 @@ export const AdminPlaceholder: React.FC = () => {
                 <h3 className="font-heading font-black text-sm uppercase tracking-wider text-white">
                   URGENT: Active Safety Incidents Requiring Dispatch ({activeIncidents.length})
                 </h3>
-                <p className="text-[11px] text-[#FF5C6C] font-mono">
+                <p className="text-xs text-[#FF5C6C] font-mono">
                   This does not contact emergency services. In an emergency dial 112.
                 </p>
               </div>
@@ -222,11 +222,11 @@ export const AdminPlaceholder: React.FC = () => {
             {activeIncidents.map((inc) => (
               <div key={inc.id} className="p-3 bg-[#07070A] rounded-xl border border-[#FF5C6C]/50 text-xs space-y-2">
                 <div className="flex items-center justify-between font-mono">
-                  <span className="text-white font-bold">{inc.id} &bull; Job {inc.job_id.replace(/^job_/, '')}</span>
-                  <span className="text-[#FF5C6C] font-bold text-[10px] uppercase">Active Alert</span>
+                  <span className="text-white font-bold">Incident {inc.id.replace(/^inc_/, '')} &bull; Job {inc.job_id.replace(/^job_/, '')}</span>
+                  <span className="text-[#FF5C6C] font-bold text-xs uppercase">Active Alert</span>
                 </div>
                 <p className="text-[#F4F1EC] font-sans">{inc.details || 'Emergency alert raised by customer on site.'}</p>
-                <div className="p-2 bg-[#151821] rounded font-mono text-[11px] text-[#A7A29A] flex items-center justify-between">
+                <div className="p-2 bg-[#151821] rounded font-mono text-xs text-[#A7A29A] flex items-center justify-between">
                   <span>GPS: {inc.lat.toFixed(4)}, {inc.lng.toFixed(4)}</span>
                   <span>Reported by: <strong>{inc.reporter_name || inc.reported_by}</strong></span>
                 </div>
@@ -352,7 +352,7 @@ export const AdminPlaceholder: React.FC = () => {
               <h3 className="font-heading font-bold text-sm text-white uppercase tracking-wider">
                 Worker Trust &amp; Document Registry
               </h3>
-              <p className="text-[11px] text-[#FFB81C] mt-0.5 font-sans font-medium">
+              <p className="text-xs text-[#FFB81C] mt-0.5 font-sans font-medium">
                 Documents are reviewed manually by an admin. No automated ID check or government API is integrated.
               </p>
             </div>
@@ -379,7 +379,7 @@ export const AdminPlaceholder: React.FC = () => {
                     <td className="py-3.5 px-4 font-heading font-bold text-white uppercase tracking-wider">
                       {w.name}
                       {w.is_flagged && (
-                        <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-[#FFB81C]/20 text-[#FFB81C] font-heading uppercase font-bold border border-[#FFB81C]/30">
+                        <span className="ml-2 text-xs px-1.5 py-0.5 rounded bg-[#FFB81C]/20 text-[#FFB81C] font-heading uppercase font-bold border border-[#FFB81C]/30">
                           Under review
                         </span>
                       )}
@@ -409,7 +409,7 @@ export const AdminPlaceholder: React.FC = () => {
                         </Badge>
                       )}
                     </td>
-                    <td className="py-3.5 px-4 font-mono text-[11px]">
+                    <td className="py-3.5 px-4 font-mono text-xs">
                       {w.verification_doc_path ? (
                         <button
                           onClick={() => setPreviewDocUrl(w.verification_doc_path || null)}
@@ -420,7 +420,7 @@ export const AdminPlaceholder: React.FC = () => {
                           <Eye className="w-3 h-3 ml-1" />
                         </button>
                       ) : (
-                        <span className="text-[#6F6B65] italic">No document uploaded</span>
+                        <span className="text-[#A7A29A] italic">No document uploaded</span>
                       )}
                     </td>
                     <td className="py-3.5 px-4 text-right">
@@ -429,7 +429,7 @@ export const AdminPlaceholder: React.FC = () => {
                           <button
                             onClick={() => handleUpdateStatus(w.id, 'verified')}
                             disabled={updatingId === w.id}
-                            className="px-2 py-1 rounded bg-[#5EE6FF]/15 hover:bg-[#5EE6FF]/25 text-[#5EE6FF] border border-[#5EE6FF]/30 font-heading text-[10px] uppercase font-bold cursor-pointer"
+                            className="px-2 py-1 rounded bg-[#5EE6FF]/15 hover:bg-[#5EE6FF]/25 text-[#5EE6FF] border border-[#5EE6FF]/30 font-heading text-xs uppercase font-bold cursor-pointer"
                           >
                             Approve
                           </button>
@@ -441,7 +441,7 @@ export const AdminPlaceholder: React.FC = () => {
                               setRejectReason('Trade credentials did not meet Bangalore district verification guidelines.');
                             }}
                             disabled={updatingId === w.id}
-                            className="px-2 py-1 rounded bg-[#FF5C6C]/15 hover:bg-[#FF5C6C]/25 text-[#FF5C6C] border border-[#FF5C6C]/30 font-heading text-[10px] uppercase font-bold cursor-pointer"
+                            className="px-2 py-1 rounded bg-[#FF5C6C]/15 hover:bg-[#FF5C6C]/25 text-[#FF5C6C] border border-[#FF5C6C]/30 font-heading text-xs uppercase font-bold cursor-pointer"
                           >
                             Reject
                           </button>
@@ -463,7 +463,7 @@ export const AdminPlaceholder: React.FC = () => {
             <h3 className="font-heading font-bold text-sm text-white uppercase tracking-wider">
               Flagged Workers Moderation Queue ({flaggedWorkers.length})
             </h3>
-            <p className="text-[11px] text-[#A7A29A] mt-0.5 font-sans">
+            <p className="text-xs text-[#A7A29A] mt-0.5 font-sans">
               Workers are auto-flagged after 3 reports from 3 DISTINCT customers. Flagged workers show an &ldquo;Under review&rdquo; chip and rank last in customer matching.
             </p>
           </div>
@@ -488,7 +488,7 @@ export const AdminPlaceholder: React.FC = () => {
                     </Badge>
                   </div>
 
-                  <div className="p-2.5 bg-[#151821] rounded font-mono text-[11px] text-[#A7A29A] space-y-1">
+                  <div className="p-2.5 bg-[#151821] rounded font-mono text-xs text-[#A7A29A] space-y-1">
                     <div>Status: <strong>Ranks Last in Matching Radar</strong></div>
                     <div>Rating: {w.rating_avg || 0} ★ &bull; Jobs Completed: {w.jobs_completed || 0}</div>
                   </div>
@@ -523,7 +523,7 @@ export const AdminPlaceholder: React.FC = () => {
             <h3 className="font-heading font-bold text-sm text-white uppercase tracking-wider">
               Customer Reports &amp; Grievance Queue ({reports.length})
             </h3>
-            <p className="text-[11px] text-[#A7A29A] mt-0.5 font-sans">
+            <p className="text-xs text-[#A7A29A] mt-0.5 font-sans">
               Reports filed by customers across completed or active jobs.
             </p>
           </div>
@@ -544,17 +544,17 @@ export const AdminPlaceholder: React.FC = () => {
               <tbody className="divide-y divide-[#2A2E3A] text-slate-300 font-sans">
                 {reports.map((r) => (
                   <tr key={r.id} className="hover:bg-[#151821]">
-                    <td className="py-3 px-3 font-mono font-bold text-white">{r.id}</td>
+                    <td className="py-3 px-3 font-mono font-bold text-white">Report {r.id.replace(/^rep_/, '')}</td>
                     <td className="py-3 px-3 font-mono text-[#5EE6FF]">Job {r.job_id.replace(/^job_/, '')}</td>
                     <td className="py-3 px-3">{r.reporter_name || r.reporter_id}</td>
                     <td className="py-3 px-3 font-heading font-bold text-white uppercase">{r.worker_name || r.worker_id}</td>
                     <td className="py-3 px-3">
-                      <span className="px-2 py-0.5 rounded bg-[#FF5C6C]/15 text-[#FF5C6C] font-heading text-[10px] uppercase font-bold border border-[#FF5C6C]/30">
+                      <span className="px-2 py-0.5 rounded bg-[#FF5C6C]/15 text-[#FF5C6C] font-heading text-xs uppercase font-bold border border-[#FF5C6C]/30">
                         {r.reason}
                       </span>
                     </td>
                     <td className="py-3 px-3 text-[#A7A29A] max-w-xs truncate">{r.details || '—'}</td>
-                    <td className="py-3 px-3 font-mono text-[11px] text-[#6F6B65]">
+                    <td className="py-3 px-3 font-mono text-xs text-[#A7A29A]">
                       {new Date(r.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </td>
                   </tr>
@@ -572,7 +572,7 @@ export const AdminPlaceholder: React.FC = () => {
             <h3 className="font-heading font-bold text-sm text-white uppercase tracking-wider">
               Safety Alerts &amp; Emergency Queue ({incidents.length})
             </h3>
-            <p className="text-[11px] text-[#A7A29A] mt-0.5 font-sans">
+            <p className="text-xs text-[#A7A29A] mt-0.5 font-sans">
               Notice: Platform safety alerts do not contact emergency services. In an emergency dial 112.
             </p>
           </div>
@@ -588,13 +588,13 @@ export const AdminPlaceholder: React.FC = () => {
                 }`}
               >
                 <div className="flex items-center justify-between font-mono">
-                  <span className="text-white font-bold">{inc.id}</span>
+                  <span className="text-white font-bold">Incident {inc.id.replace(/^inc_/, '')} &bull; Job {inc.job_id.replace(/^job_/, '')}</span>
                   <Badge variant={inc.status === 'active' ? 'danger' : 'neutral'} size="sm">
                     {inc.status === 'active' ? 'ACTIVE' : 'RESOLVED'}
                   </Badge>
                 </div>
                 <p className="text-white font-sans">{inc.details}</p>
-                <div className="p-2 bg-[#07070A] rounded font-mono text-[11px] text-[#A7A29A] space-y-0.5">
+                <div className="p-2 bg-[#07070A] rounded font-mono text-xs text-[#A7A29A] space-y-0.5">
                   <div>GPS: {inc.lat.toFixed(4)}, {inc.lng.toFixed(4)}</div>
                   <div>Reported By: {inc.reporter_name || inc.reported_by}</div>
                 </div>
@@ -623,7 +623,7 @@ export const AdminPlaceholder: React.FC = () => {
               <h3 className="font-heading font-bold text-sm text-white uppercase tracking-wider">
                 Price Band Telemetry Monitor
               </h3>
-              <p className="text-[11px] text-[#A7A29A] mt-0.5 font-sans">
+              <p className="text-xs text-[#A7A29A] mt-0.5 font-sans">
                 Real-time snapshots computed from completed historical jobs by category and micro-market area.
               </p>
             </div>
@@ -650,7 +650,7 @@ export const AdminPlaceholder: React.FC = () => {
                 {snapshots.map((s) => (
                   <tr key={s.id} className="hover:bg-[#151821]">
                     <td className="py-3 px-3 font-heading font-bold text-white uppercase">{getCategoryLabel(s.category)}</td>
-                    <td className="py-3 px-3 font-mono text-[#5EE6FF] text-[11px]">{s.area_key}</td>
+                    <td className="py-3 px-3 font-mono text-[#5EE6FF] text-xs">{s.area_key}</td>
                     <td className="py-3 px-3 font-mono tabular-nums text-white">{formatINR(s.low)}</td>
                     <td className="py-3 px-3 font-mono font-bold text-[#FFB81C] tabular-nums">{formatINR(s.typical)}</td>
                     <td className="py-3 px-3 font-mono tabular-nums text-white">{formatINR(s.high)}</td>
@@ -660,7 +660,7 @@ export const AdminPlaceholder: React.FC = () => {
                         {s.confidence}
                       </Badge>
                     </td>
-                    <td className="py-3 px-3 font-mono text-[11px] text-[#6F6B65]">
+                    <td className="py-3 px-3 font-mono text-xs text-[#A7A29A]">
                       {new Date(s.computed_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </td>
                   </tr>
@@ -678,7 +678,7 @@ export const AdminPlaceholder: React.FC = () => {
             <h3 className="font-heading font-bold text-sm text-white uppercase tracking-wider">
               Anti-Gaming &amp; Statistical Exclusion Audit Log ({auditLog.length})
             </h3>
-            <p className="text-[11px] text-[#A7A29A] mt-0.5 font-sans">
+            <p className="text-xs text-[#A7A29A] mt-0.5 font-sans">
               Full algorithmic audit log showing which seed or real completed jobs were excluded from fair price band calculations and why.
             </p>
           </div>
@@ -708,7 +708,7 @@ export const AdminPlaceholder: React.FC = () => {
                       {formatINR(item.agreed_price)}
                     </td>
                     <td className="py-3 px-3">
-                      <span className={`px-2 py-0.5 rounded font-heading text-[10px] uppercase font-bold border ${
+                      <span className={`px-2 py-0.5 rounded font-heading text-xs uppercase font-bold border ${
                         item.reason === 'outlier'
                           ? 'bg-[#FF5C6C]/15 text-[#FF5C6C] border-[#FF5C6C]/30'
                           : item.reason === 'pair_cap'
@@ -718,7 +718,7 @@ export const AdminPlaceholder: React.FC = () => {
                         {item.reason === 'outlier' ? 'IQR Outlier' : item.reason === 'pair_cap' ? 'Pair Cap' : 'Weekly 10% Bound'}
                       </span>
                     </td>
-                    <td className="py-3 px-3 text-[#A7A29A] font-sans text-[11px] leading-relaxed max-w-md">
+                    <td className="py-3 px-3 text-[#A7A29A] font-sans text-xs leading-relaxed max-w-md">
                       {item.details}
                     </td>
                     <td className="py-3 px-3">
@@ -759,7 +759,7 @@ export const AdminPlaceholder: React.FC = () => {
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
               placeholder="e.g. Document image blurred; ID address does not match Bengaluru district..."
-              className="w-full bg-[#07070A] border border-[#2A2E3A] rounded-xl p-3 text-xs text-white placeholder-[#6F6B65] focus:outline-none focus:border-[#FF5C6C]"
+              className="w-full bg-[#07070A] border border-[#2A2E3A] rounded-xl p-3 text-xs text-white placeholder-[#8E8A82] focus:outline-none focus:border-[#FF5C6C]"
             />
 
             <div className="flex items-center justify-end gap-2 pt-2">
@@ -801,7 +801,7 @@ export const AdminPlaceholder: React.FC = () => {
 
             <div className="p-3 bg-[#07070A] rounded-xl border border-[#2A2E3A] font-mono text-xs text-slate-300 space-y-1">
               <div>File: <strong className="text-white">{previewDocUrl.split('/').pop()}</strong></div>
-              <div className="text-[11px] text-[#A7A29A]">Access: Role-restricted to Admin and Document Owner</div>
+              <div className="text-xs text-[#A7A29A]">Access: Role-restricted to Admin and Document Owner</div>
             </div>
 
             <div className="h-64 bg-[#07070A] rounded-xl border border-[#2A2E3A] flex flex-col items-center justify-center p-4 text-center space-y-3">
@@ -810,7 +810,7 @@ export const AdminPlaceholder: React.FC = () => {
                 <p className="text-xs font-bold text-white uppercase font-heading">
                   Document Stored in /uploads
                 </p>
-                <p className="text-[11px] text-[#A7A29A] font-sans">
+                <p className="text-xs text-[#A7A29A] font-sans">
                   Masked credential verified for compliance.
                 </p>
               </div>
@@ -825,7 +825,7 @@ export const AdminPlaceholder: React.FC = () => {
               </a>
             </div>
 
-            <div className="text-[11px] text-[#6F6B65] font-sans italic">
+            <div className="text-xs text-[#A7A29A] font-sans italic">
               Notice: Documents are reviewed manually by an admin. No automated ID check or government API is integrated. Demo role switcher is not real authentication.
             </div>
           </div>

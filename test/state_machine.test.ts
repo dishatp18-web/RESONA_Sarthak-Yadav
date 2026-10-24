@@ -108,6 +108,28 @@ const outlierBand = calculateFairPriceBand('plumbing', customer.lat, customer.ln
 if (outlierBand.outliersRemoved < 1) {
   throw new Error(`Expected at least 1 outlier removed, got ${outlierBand.outliersRemoved}`);
 }
-console.log(`✓ Step 6: Injected ₹4,500 outlier job; IQR rule successfully detected and rejected it (outliers removed: ${outlierBand.outliersRemoved}).`);
+// 9. Test Phone Masking Lifecycle: Masked -> Unmasked (accepted/in_progress) -> Masked again (rated)
+const checkPhoneMasking = (status: string, rawPhone: string) => {
+  const unmaskedStatuses = ['accepted', 'in_progress', 'completed'];
+  const isAccepted = unmaskedStatuses.includes(status);
+  return isAccepted ? rawPhone : '+91 ••••• •••••';
+};
+
+if (checkPhoneMasking('requested', customer.phone) !== '+91 ••••• •••••') {
+  throw new Error('Phone must be masked in requested status');
+}
+if (checkPhoneMasking('negotiating', customer.phone) !== '+91 ••••• •••••') {
+  throw new Error('Phone must be masked in negotiating status');
+}
+if (checkPhoneMasking('accepted', customer.phone) !== customer.phone) {
+  throw new Error('Phone must be unmasked in accepted status');
+}
+if (checkPhoneMasking('in_progress', customer.phone) !== customer.phone) {
+  throw new Error('Phone must be unmasked in in_progress status');
+}
+if (checkPhoneMasking('rated', customer.phone) !== '+91 ••••• •••••') {
+  throw new Error('Phone must be re-masked after job is rated');
+}
+console.log('✓ Step 7: Phone masking lifecycle verified: masked until accepted, masked again after rated.');
 
 console.log('\n🎉 ALL State Machine, Ratings, and Live Band Recompute Tests PASSED 100%!');

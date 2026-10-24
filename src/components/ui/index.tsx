@@ -1,6 +1,6 @@
 /**
  * FairFix "Mark III Forge" Component Suite
- * Dark metallic cockpit styling, red & gold armor, and cyan arc-reactor status accents.
+ * Dark metallic cockpit styling, red & gold armor, and cyan live status accents.
  */
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -55,7 +55,7 @@ export const ForgeButton: React.FC<ForgeButtonProps> = ({
   ...props
 }) => {
   const sizeClasses = {
-    sm: 'py-1.5 px-3.5 text-xs rounded-lg gap-1.5 min-h-[36px]',
+    sm: 'py-2 px-3.5 text-xs rounded-lg gap-1.5 min-h-[44px]',
     md: 'py-2.5 px-5 text-sm rounded-xl gap-2 min-h-[44px]',
     lg: 'py-3.5 px-7 text-base rounded-xl gap-2.5 min-h-[48px]',
   }[size];
@@ -154,7 +154,7 @@ export const Badge: React.FC<BadgeProps> = ({
   };
 
   const DisplayIcon = Icon || defaultIcons[variant];
-  const sizeStyles = size === 'sm' ? 'text-[10px] px-2 py-0.5' : 'text-xs px-2.5 py-1';
+  const sizeStyles = size === 'sm' ? 'text-xs px-2 py-0.5' : 'text-xs px-2.5 py-1';
 
   return (
     <span
@@ -227,7 +227,7 @@ export const Tabs: React.FC<TabsProps> = ({
             {Icon && <Icon className="w-3.5 h-3.5 shrink-0" />}
             <span>{opt.label}</span>
             {opt.badge !== undefined && (
-              <span className={`text-[10px] px-1.5 py-0.2 rounded font-mono font-bold ml-1 ${
+              <span className={`text-xs px-1.5 py-0.2 rounded font-mono font-bold ml-1 ${
                 isActive ? 'bg-black/40 text-[#FFD65A]' : 'bg-white/10 text-slate-300'
               }`}>
                 {opt.badge}
@@ -418,10 +418,10 @@ export const StatCard: React.FC<StatCardProps> = ({
           {prefix}{displayValue.toLocaleString('en-IN')}{suffix}
         </span>
         {change && (
-          <span className="text-[11px] font-heading font-bold text-[#5EE6FF]">{change}</span>
+          <span className="text-xs font-heading font-bold text-[#5EE6FF]">{change}</span>
         )}
       </div>
-      {subtext && <p className="text-[11px] text-[#A7A29A] mt-1 font-sans">{subtext}</p>}
+      {subtext && <p className="text-xs text-[#A7A29A] mt-1 font-sans">{subtext}</p>}
     </HudPanel>
   );
 };
@@ -513,11 +513,11 @@ export const Timeline: React.FC<{ steps: TimelineStep[] }> = ({ steps }) => {
                   ? 'border-[#FFB81C] bg-[#FFB81C] text-black shadow-[0_0_8px_rgba(255,184,28,0.5)]'
                   : step.isCurrent
                   ? 'border-[#5EE6FF] bg-[#5EE6FF]/20 text-[#5EE6FF] ring-4 ring-[#5EE6FF]/20 animate-pulse'
-                  : 'border-[#3B4150] bg-[#07070A] text-[#6F6B65]'
+                  : 'border-[#3B4150] bg-[#07070A] text-[#A7A29A]'
               }`}
             >
               {step.isCompleted ? (
-                <span className="text-[10px] font-black">✓</span>
+                <span className="text-xs font-black">✓</span>
               ) : (
                 <span className="w-1.5 h-1.5 rounded-full bg-current" />
               )}
@@ -527,19 +527,19 @@ export const Timeline: React.FC<{ steps: TimelineStep[] }> = ({ steps }) => {
             <div className="flex items-baseline justify-between gap-2">
               <h5
                 className={`font-heading text-xs font-bold uppercase tracking-wider ${
-                  step.isCompleted || step.isCurrent ? 'text-[#F4F1EC]' : 'text-[#6F6B65]'
+                  step.isCompleted || step.isCurrent ? 'text-[#F4F1EC]' : 'text-[#A7A29A]'
                 }`}
               >
                 {step.title}
               </h5>
               {step.time && (
-                <span className="text-[10px] text-[#A7A29A] font-mono">
+                <span className="text-xs text-[#A7A29A] font-mono">
                   {new Date(step.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
               )}
             </div>
             {step.description && (
-              <p className="text-[11px] text-[#A7A29A] mt-0.5 font-sans leading-relaxed">{step.description}</p>
+              <p className="text-xs text-[#A7A29A] mt-0.5 font-sans leading-relaxed">{step.description}</p>
             )}
           </div>
         );

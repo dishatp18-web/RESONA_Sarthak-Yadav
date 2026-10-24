@@ -720,7 +720,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
           </div>
 
           <div className="text-right shrink-0">
-            <span className="text-[10px] uppercase font-mono text-[#A7A29A] block">
+            <span className="text-xs uppercase font-mono text-[#A7A29A] block">
               {job.agreed_price ? 'Agreed Price' : 'Offered Price'}
             </span>
             <span className="font-heading text-xl font-black text-white tabular-nums">
@@ -730,7 +730,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
         </div>
 
         {/* Counterparty Identity */}
-        <div className="flex items-center justify-between text-[11px] text-[#A7A29A] pt-2 border-t border-[#2A2E3A]">
+        <div className="flex items-center justify-between text-xs text-[#A7A29A] pt-2 border-t border-[#2A2E3A]">
           <span className="flex items-center gap-1.5 font-sans">
             <UserCheck className="w-3.5 h-3.5 text-[#5EE6FF]" />
             {currentUser?.role === 'customer' ? (
@@ -739,7 +739,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
               <span>Customer: <strong className="text-white">{job.customer_name || 'Customer'}</strong></span>
             )}
           </span>
-          <span className="font-mono text-[10px]">
+          <span className="font-mono text-xs">
             Created: {new Date(job.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </span>
         </div>
@@ -748,10 +748,10 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
       {/* Animated Step Tracker Timeline */}
       <HudPanel variant="default" className="p-4 sm:p-5 space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-[10px] uppercase font-heading font-bold tracking-wider text-[#FFB81C]">
+          <span className="text-xs uppercase font-heading font-bold tracking-wider text-[#FFB81C]">
             Live Service Progress
           </span>
-          <span className="text-[10px] font-mono text-[#5EE6FF]">
+          <span className="text-xs font-mono text-[#5EE6FF]">
             3s Real-Time Sync
           </span>
         </div>
@@ -781,7 +781,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
             <p className="font-heading font-bold text-white uppercase tracking-wider">
               Request Cancelled or Declined
             </p>
-            <p className="text-[11px] text-[#A7A29A] font-sans mt-0.5">
+            <p className="text-xs text-[#A7A29A] font-sans mt-0.5">
               This request was closed without completing service.
             </p>
           </div>
@@ -816,7 +816,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
 
           <div className="p-3 bg-[#07070A] rounded-xl border border-[#2A2E3A] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
             <div className="space-y-1">
-              <span className="text-[10px] uppercase font-heading font-bold tracking-wider text-[#FFD65A] block">
+              <span className="text-xs uppercase font-heading font-bold tracking-wider text-[#FFD65A] block">
                 {job.status === 'rated' ? 'Direct Line (Privacy Masked):' : 'Direct Unmasked Line:'}
               </span>
               <div className="flex items-center gap-3 font-mono text-sm text-white font-bold">
@@ -850,7 +850,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
             )}
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-[#A7A29A] pt-2 border-t border-[#2A2E3A]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-[#A7A29A] pt-2 border-t border-[#2A2E3A]">
             <span className="flex items-center gap-1.5 text-white font-medium">
               <CreditCard className="w-3.5 h-3.5 text-[#FFB81C]" />
               <strong>Payment Policy:</strong> Cash on completion only.
@@ -867,7 +867,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
         <HudPanel variant="default" className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#2A2E3A] pb-3">
             <div>
-              <span className="text-[10px] font-heading font-bold uppercase tracking-wider text-[#5EE6FF] flex items-center gap-1.5">
+              <span className="text-xs font-heading font-bold uppercase tracking-wider text-[#5EE6FF] flex items-center gap-1.5">
                 <Radio className="w-3.5 h-3.5 text-[#5EE6FF] animate-pulse" />
                 Live Dispatch Telemetry
               </span>
@@ -909,12 +909,12 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
                 <AlertTriangle className="w-4 h-4 shrink-0" />
                 <span>Geolocation Notice</span>
               </div>
-              <p className="text-[11px] text-[#A7A29A] font-sans">{geoError}</p>
+              <p className="text-xs text-[#A7A29A] font-sans">{geoError}</p>
               <div className="flex items-center gap-2 pt-1">
                 <button
                   type="button"
                   onClick={handleManualOnMyWay}
-                  className="px-3 py-1 rounded bg-[#FFB81C] text-black font-heading font-bold uppercase text-[11px] hover:bg-[#FFD65A] cursor-pointer"
+                  className="px-3 py-1 rounded bg-[#FFB81C] text-black font-heading font-bold uppercase text-xs hover:bg-[#FFD65A] cursor-pointer"
                 >
                   Fallback: I&apos;m On My Way
                 </button>
@@ -948,7 +948,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
               <p className="font-sans font-medium text-white">
                 &ldquo;Your location is shared with this customer until the job ends. It is deleted when the job completes or is cancelled.&rdquo;
               </p>
-              <p className="text-[11px] text-[#A7A29A] font-sans">
+              <p className="text-xs text-[#A7A29A] font-sans">
                 Uses continuous high-accuracy fixes with exponential smoothing (alpha 0.4). Any fix with accuracy worse than 100 meters is automatically discarded.
               </p>
             </div>
@@ -984,7 +984,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
       {/* WORKER ACTIONS: Start Job / Complete Job */}
       {currentUser?.role === 'worker' && !isCancelled && !isDisputed && (
         <HudPanel variant="default" className="p-4 space-y-3">
-          <span className="text-[10px] uppercase font-heading font-bold tracking-wider text-[#FFB81C] block">
+          <span className="text-xs uppercase font-heading font-bold tracking-wider text-[#FFB81C] block">
             Worker Job Execution Controls
           </span>
 
@@ -992,7 +992,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-[#07070A] rounded-xl border border-[#2A2E3A]">
               <div>
                 <p className="font-heading font-bold text-xs uppercase text-white">Arrived at Location?</p>
-                <p className="text-[11px] text-[#A7A29A]">Click to transition job to &ldquo;In Progress&rdquo; and notify customer.</p>
+                <p className="text-xs text-[#A7A29A]">Click to transition job to &ldquo;In Progress&rdquo; and notify customer.</p>
               </div>
               <ForgeButton
                 variant="primary"
@@ -1011,7 +1011,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-[#07070A] rounded-xl border border-[#2A2E3A]">
               <div>
                 <p className="font-heading font-bold text-xs uppercase text-[#5EE6FF]">Work Finished &amp; Inspected?</p>
-                <p className="text-[11px] text-[#A7A29A]">Confirm completion and direct cash settlement of {formatINR(job.agreed_price || job.offered_price)}.</p>
+                <p className="text-xs text-[#A7A29A]">Confirm completion and direct cash settlement of {formatINR(job.agreed_price || job.offered_price)}.</p>
               </div>
               <ForgeButton
                 variant="primary"
@@ -1044,7 +1044,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
         >
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-[10px] uppercase font-heading font-bold tracking-wider text-[#FFD65A] flex items-center gap-1.5">
+              <span className="text-xs uppercase font-heading font-bold tracking-wider text-[#FFD65A] flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-[#FFB81C]" />
                 Job Completed &bull; Rate Service Quality
               </span>
@@ -1063,7 +1063,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
 
           {/* 1-5 Star Interactive Selector */}
           <div className="space-y-1.5">
-            <label className="text-[10px] font-heading font-bold uppercase tracking-wider text-[#A7A29A]">
+            <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#A7A29A]">
               Star Rating
             </label>
             <div className="flex items-center gap-2">
@@ -1097,7 +1097,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
 
           {/* Quick Preset Review Tags */}
           <div className="space-y-1.5">
-            <label className="text-[10px] font-heading font-bold uppercase tracking-wider text-[#A7A29A]">
+            <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#A7A29A]">
               Quick Feedback Tags
             </label>
             <div className="flex flex-wrap gap-1.5">
@@ -1120,7 +1120,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
 
           {/* Review Comment Text */}
           <div className="space-y-1.5">
-            <label className="text-[10px] font-heading font-bold uppercase tracking-wider text-[#A7A29A]">
+            <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#A7A29A]">
               Review Comments
             </label>
             <textarea
@@ -1128,7 +1128,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
               value={ratingComment}
               onChange={(e) => setRatingComment(e.target.value)}
               placeholder="Describe work quality, punctuality, and pricing..."
-              className="w-full bg-[#07070A] border border-[#2A2E3A] rounded-xl px-3.5 py-2 text-xs text-[#F4F1EC] placeholder-[#6F6B65] focus:outline-none focus:border-[#FFB81C] font-sans"
+              className="w-full bg-[#07070A] border border-[#2A2E3A] rounded-xl px-3.5 py-2 text-xs text-[#F4F1EC] placeholder-[#8E8A82] focus:outline-none focus:border-[#FFB81C] font-sans"
             />
           </div>
 
@@ -1168,7 +1168,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
             </p>
           )}
 
-          <div className="flex items-center gap-2 text-[11px] text-[#5EE6FF] pt-1">
+          <div className="flex items-center gap-2 text-xs text-[#5EE6FF] pt-1">
             <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
             <span>This completed job was incorporated into the live fair-price band.</span>
           </div>
@@ -1183,7 +1183,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
             <button
               type="button"
               onClick={() => setShowSafetyModal(true)}
-              className="px-2.5 py-1.5 rounded-lg bg-[#FF5C6C]/15 hover:bg-[#FF5C6C]/25 text-[#FF5C6C] border border-[#FF5C6C]/40 font-heading text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5 cursor-pointer"
+              className="px-2.5 py-1.5 rounded-lg bg-[#FF5C6C]/15 hover:bg-[#FF5C6C]/25 text-[#FF5C6C] border border-[#FF5C6C]/40 font-heading text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 cursor-pointer"
             >
               <ShieldAlert className="w-3.5 h-3.5" />
               <span>Safety</span>
@@ -1195,7 +1195,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
             <button
               type="button"
               onClick={handleGenerateShareTrip}
-              className="px-2.5 py-1.5 rounded-lg bg-[#5EE6FF]/15 hover:bg-[#5EE6FF]/25 text-[#5EE6FF] border border-[#5EE6FF]/40 font-heading text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5 cursor-pointer"
+              className="px-2.5 py-1.5 rounded-lg bg-[#5EE6FF]/15 hover:bg-[#5EE6FF]/25 text-[#5EE6FF] border border-[#5EE6FF]/40 font-heading text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 cursor-pointer"
             >
               <Share2 className="w-3.5 h-3.5" />
               <span>Share Trip</span>
@@ -1207,7 +1207,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
             <button
               type="button"
               onClick={() => setShowReportModal(true)}
-              className="px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 border border-white/15 font-heading text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5 cursor-pointer"
+              className="px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 border border-white/15 font-heading text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 cursor-pointer"
             >
               <Flag className="w-3.5 h-3.5 text-[#FFB81C]" />
               <span>Report</span>
@@ -1222,7 +1222,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
               <button
                 type="button"
                 onClick={() => setShowCancelInput(!showCancelInput)}
-                className="text-[#A7A29A] hover:text-white hover:underline cursor-pointer flex items-center gap-1 font-heading text-[11px] uppercase tracking-wider"
+                className="text-[#A7A29A] hover:text-white hover:underline cursor-pointer flex items-center gap-1 font-heading text-xs uppercase tracking-wider"
               >
                 <XCircle className="w-3.5 h-3.5" />
                 <span>Cancel Request</span>
@@ -1248,7 +1248,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-[10px] font-heading font-bold uppercase tracking-wider text-[#A7A29A]">
+            <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#A7A29A]">
               Reason for Report
             </label>
             <select
@@ -1265,7 +1265,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-[10px] font-heading font-bold uppercase tracking-wider text-[#A7A29A]">
+            <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#A7A29A]">
               Additional Details (Optional)
             </label>
             <textarea
@@ -1273,11 +1273,11 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
               value={reportDetails}
               onChange={(e) => setReportDetails(e.target.value)}
               placeholder="Briefly describe what happened..."
-              className="w-full bg-[#151821] border border-[#2A2E3A] rounded-lg px-3 py-2 text-xs text-white placeholder-[#6F6B65] focus:outline-none focus:border-[#FFB81C]"
+              className="w-full bg-[#151821] border border-[#2A2E3A] rounded-lg px-3 py-2 text-xs text-white placeholder-[#8E8A82] focus:outline-none focus:border-[#FFB81C]"
             />
           </div>
 
-          <div className="p-2.5 bg-[#FFB81C]/10 rounded-lg text-[10px] text-[#A7A29A] font-mono leading-relaxed">
+          <div className="p-2.5 bg-[#FFB81C]/10 rounded-lg text-xs text-[#A7A29A] font-mono leading-relaxed">
             Policy: Workers are auto-flagged for admin intervention after 3 reports from 3 DISTINCT customers. One customer cannot report twice toward the threshold.
           </div>
 
@@ -1321,7 +1321,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
             value={safetyDetails}
             onChange={(e) => setSafetyDetails(e.target.value)}
             placeholder="Emergency note (optional)..."
-            className="w-full bg-[#07070A] border border-[#2A2E3A] rounded-lg px-3 py-2 text-xs text-white placeholder-[#6F6B65] focus:outline-none focus:border-[#FF5C6C]"
+            className="w-full bg-[#07070A] border border-[#2A2E3A] rounded-lg px-3 py-2 text-xs text-white placeholder-[#8E8A82] focus:outline-none focus:border-[#FF5C6C]"
           />
 
           <ForgeButton
@@ -1365,7 +1365,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
                 setCopiedShare(true);
                 setTimeout(() => setCopiedShare(false), 2000);
               }}
-              className="px-2.5 py-1 rounded bg-[#5EE6FF]/20 text-[#5EE6FF] text-[11px] font-heading font-bold uppercase hover:bg-[#5EE6FF]/30 cursor-pointer flex items-center gap-1"
+              className="px-2.5 py-1 rounded bg-[#5EE6FF]/20 text-[#5EE6FF] text-xs font-heading font-bold uppercase hover:bg-[#5EE6FF]/30 cursor-pointer flex items-center gap-1"
             >
               {copiedShare ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
               <span>{copiedShare ? 'Copied' : 'Copy'}</span>
@@ -1376,7 +1376,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
             href={`/track/${shareToken}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[11px] text-[#5EE6FF] hover:underline font-heading uppercase font-bold"
+            className="inline-flex items-center gap-1 text-xs text-[#5EE6FF] hover:underline font-heading uppercase font-bold"
           >
             <ExternalLink className="w-3 h-3" />
             <span>Open Tracking View in New Tab</span>
@@ -1404,7 +1404,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
             value={disputeReason}
             onChange={(e) => setDisputeReason(e.target.value)}
             placeholder="Explain the safety, quality, or pricing issue..."
-            className="w-full bg-[#07070A] border border-[#2A2E3A] rounded-xl px-3 py-2 text-xs text-white placeholder-[#6F6B65] focus:outline-none focus:border-[#FF5C6C]"
+            className="w-full bg-[#07070A] border border-[#2A2E3A] rounded-xl px-3 py-2 text-xs text-white placeholder-[#8E8A82] focus:outline-none focus:border-[#FF5C6C]"
           />
           <ForgeButton
             variant="danger"
@@ -1438,7 +1438,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
             value={cancelReason}
             onChange={(e) => setCancelReason(e.target.value)}
             placeholder="Reason for cancellation (optional)..."
-            className="w-full bg-[#07070A] border border-[#2A2E3A] rounded-xl px-3 py-2 text-xs text-white placeholder-[#6F6B65] focus:outline-none focus:border-[#FFB81C]"
+            className="w-full bg-[#07070A] border border-[#2A2E3A] rounded-xl px-3 py-2 text-xs text-white placeholder-[#8E8A82] focus:outline-none focus:border-[#FFB81C]"
           />
           <ForgeButton
             variant="ghost"
@@ -1459,7 +1459,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
             <MessageSquare className="w-3.5 h-3.5 text-[#5EE6FF]" />
             Negotiation History
           </span>
-          <span className="text-[10px] font-mono text-[#A7A29A]">
+          <span className="text-xs font-mono text-[#A7A29A]">
             Round {currentRound} of 3
           </span>
         </div>
@@ -1500,7 +1500,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
                       : 'bg-[#0E1016] border-[#2A2E3A] text-white'
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-3 text-[10px] uppercase font-heading font-bold tracking-wider">
+                  <div className="flex items-center justify-between gap-3 text-xs uppercase font-heading font-bold tracking-wider">
                     <span className={isSender ? 'text-[#FFD65A]' : 'text-[#5EE6FF]'}>
                       {isSender ? 'You' : offer.from_role === 'worker' ? 'Worker Offer' : 'Customer Offer'}
                     </span>
@@ -1518,7 +1518,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
                     </Badge>
                   </div>
 
-                  <div className="text-[10px] font-mono flex items-center gap-1.5 pt-1 border-t border-white/5">
+                  <div className="text-xs font-mono flex items-center gap-1.5 pt-1 border-t border-white/5">
                     <span className="text-[#A7A29A]">Status:</span>
                     <span className={`font-bold uppercase ${
                       offer.status === 'accepted' ? 'text-[#5EE6FF]' : offer.status === 'countered' ? 'text-[#FFB81C]' : 'text-slate-400'
@@ -1539,7 +1539,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
               <span className="font-heading uppercase tracking-wider font-bold text-slate-300">
                 {isMyTurn ? 'Your Turn to Respond' : 'Waiting on Counterparty'}
               </span>
-              <span className="text-[11px] font-mono text-[#A7A29A]">
+              <span className="text-xs font-mono text-[#A7A29A]">
                 {isMyTurn
                   ? `Accept ${formatINR(latestOffer?.amount || 0)} or submit counter`
                   : `Waiting for ${isMyRole === 'customer' ? 'worker' : 'customer'}`}
@@ -1645,7 +1645,7 @@ export const NegotiationThread: React.FC<NegotiationThreadProps> = ({
                     Waiting for {isMyRole === 'customer' ? 'worker' : 'customer'} to respond to {formatINR(latestOffer?.amount || 0)}.
                   </span>
                 </div>
-                <span className="text-[10px] font-mono text-[#5EE6FF]">
+                <span className="text-xs font-mono text-[#5EE6FF]">
                   Live sync
                 </span>
               </div>

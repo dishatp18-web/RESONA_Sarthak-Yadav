@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx server.ts",
     "start": "tsx server.ts",
-    "test": "tsx test/band.test.ts",
+    "test": "tsx test/run_all.ts",
     "seed": "tsx src/server/runSeed.ts",
     "reset": "tsx src/server/runReset.ts",
     "build": "vite build",
@@ -40,7 +40,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "autoprefixer": "^10.4.21",
-    "esbuild": "^0.25.0",
+    "esbuild": "^0.28.0",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.21.0",
     "typescript": "^7.0.2"

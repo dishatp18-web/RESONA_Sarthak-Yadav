@@ -42,7 +42,7 @@ export const ConceptLab: React.FC = () => {
       summary:
         'Zero-app onboarding pipeline allowing vernacular workers (Kannada, Hindi, Tamil, Telugu) to register, verify Aadhaar, and negotiate entirely via WhatsApp.',
       problem:
-        'Smartphone app installation and multi-step English forms create a 68% drop-off barrier for hyper-local blue-collar tradespeople.',
+        'Smartphone app installation and multi-step English forms create a significant onboarding barrier for hyper-local blue-collar tradespeople.',
       architecture: [
         'Twilio / Meta Cloud WhatsApp Business API webhook listener',
         'Whisper / Indic-Conformer speech-to-text for Kannada/Hindi voice notes',
@@ -92,7 +92,7 @@ export const ConceptLab: React.FC = () => {
           </div>
 
           <div className="p-3 bg-[#111218] border border-zinc-800 text-right font-mono">
-            <div className="text-[10px] text-zinc-500 uppercase">Status Discipline</div>
+            <div className="text-xs text-zinc-500 uppercase">Status Discipline</div>
             <div className="text-xs text-amber-400 font-semibold mt-0.5">Strict Non-Operational Mock</div>
           </div>
         </div>
@@ -114,11 +114,11 @@ export const ConceptLab: React.FC = () => {
               <div>
                 {/* Mandatory Concept Chip */}
                 <div className="flex items-center justify-between mb-4">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-950/40 border border-red-500/50 text-red-400 font-mono text-[10px] uppercase font-bold tracking-wider">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-950/40 border border-red-500/50 text-red-400 font-mono text-xs uppercase font-bold tracking-wider">
                     <Lock className="w-3 h-3 text-red-400" />
                     <span>CONCEPT, NOT IMPLEMENTED</span>
                   </span>
-                  <span className={`text-[9px] font-mono px-2 py-0.5 border ${concept.accentColor}`}>
+                  <span className={`text-xs font-mono px-2 py-0.5 border ${concept.accentColor}`}>
                     {concept.badge}
                   </span>
                 </div>
@@ -136,14 +136,14 @@ export const ConceptLab: React.FC = () => {
 
                 {/* Problem Statement */}
                 <div className="mt-4 p-3 bg-[#07070A] border border-zinc-900 text-xs">
-                  <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">The Problem</div>
-                  <p className="text-zinc-300 mt-1 text-[11px] leading-relaxed">{concept.problem}</p>
+                  <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider">The Problem</div>
+                  <p className="text-zinc-300 mt-1 text-xs leading-relaxed">{concept.problem}</p>
                 </div>
 
                 {/* Architecture Specifications */}
                 <div className="mt-4 space-y-1.5">
-                  <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Planned Architecture</div>
-                  <ul className="space-y-1 text-[11px] text-zinc-400">
+                  <div className="text-xs font-mono text-zinc-500 uppercase tracking-wider">Planned Architecture</div>
+                  <ul className="space-y-1 text-xs text-zinc-400">
                     {concept.architecture.map((item, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <span className="text-[#FFB81C] font-mono shrink-0">&gt;</span>
@@ -156,7 +156,7 @@ export const ConceptLab: React.FC = () => {
 
               {/* Footer / Disabled Button */}
               <div className="mt-6 pt-4 border-t border-zinc-800/80 space-y-3">
-                <div className="text-[10px] font-mono text-zinc-500 leading-tight">
+                <div className="text-xs font-mono text-zinc-500 leading-tight">
                   <span className="text-zinc-400 font-semibold">Current State: </span>
                   {concept.readiness}
                 </div>

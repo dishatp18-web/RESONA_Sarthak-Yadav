@@ -281,7 +281,7 @@ export const TrackingMap: React.FC<TrackingMapProps> = ({
           )}
         </div>
 
-        <div className="flex items-center gap-2 font-mono text-[11px]">
+        <div className="flex items-center gap-2 font-mono text-xs">
           {isStale ? (
             <span className="px-2 py-0.5 rounded bg-[#FFB81C]/20 text-[#FFB81C] font-bold border border-[#FFB81C]/40 flex items-center gap-1">
               <AlertTriangle className="w-3 h-3" />
@@ -306,7 +306,7 @@ export const TrackingMap: React.FC<TrackingMapProps> = ({
               <p className="font-heading font-black uppercase tracking-wider text-white">
                 Worker Has Arrived Within 100m Geofence
               </p>
-              <p className="text-[11px] text-[#A7A29A] font-sans">
+              <p className="text-xs text-[#A7A29A] font-sans">
                 {isWorkerRole
                   ? 'You are at the customer location. Press "Start Job" below when ready to begin work.'
                   : `${workerName || 'The worker'} has arrived at your address.`}
@@ -374,7 +374,7 @@ export const TrackingMap: React.FC<TrackingMapProps> = ({
                     <p className="font-heading font-bold uppercase text-[#5EE6FF]">
                       {workerName || 'Assigned Worker'}
                     </p>
-                    <p className="text-[#A7A29A] font-mono text-[11px]">
+                    <p className="text-[#A7A29A] font-mono text-xs">
                       Speed: {Math.round(latestPoint.speed || 20)} km/h &bull; Accuracy: &plusmn;{Math.round(latestPoint.accuracy || 15)}m
                     </p>
                   </div>
@@ -399,7 +399,7 @@ export const TrackingMap: React.FC<TrackingMapProps> = ({
 
         {/* Map Floating HUD Overlay */}
         <div className="absolute top-3 left-3 z-[1000] flex flex-col gap-1.5 pointer-events-none">
-          <div className="bg-[#07070A]/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-[#2A2E3A] font-mono text-[10px] text-[#A7A29A] flex items-center gap-2">
+          <div className="bg-[#07070A]/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-[#2A2E3A] font-mono text-xs text-[#A7A29A] flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#5EE6FF] animate-pulse" />
             <span className="text-white font-bold">CartoDB Dark Tiles</span>
             <span>&bull;</span>
@@ -419,7 +419,7 @@ export const TrackingMap: React.FC<TrackingMapProps> = ({
       </div>
 
       {/* Privacy Notice */}
-      <div className="flex items-center gap-2 text-[11px] text-[#A7A29A] font-sans">
+      <div className="flex items-center gap-2 text-xs text-[#A7A29A] font-sans">
         <ShieldCheck className="w-3.5 h-3.5 text-[#5EE6FF] shrink-0" />
         <span>Location privacy: Exact GPS trail is deleted immediately upon job completion or cancellation.</span>
       </div>

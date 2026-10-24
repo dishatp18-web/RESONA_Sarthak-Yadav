@@ -37,6 +37,8 @@ import {
   MessageSquare,
   Handshake,
   ArrowRight,
+  ArrowLeft,
+  Check,
   ChevronRight
 } from 'lucide-react';
 
@@ -245,7 +247,7 @@ export const CustomerNewRequest: React.FC = () => {
             <Handshake className="w-3.5 h-3.5" />
             <span>Active Requests &amp; Negotiations</span>
             {activeNegotiationsCount > 0 && (
-              <span className="w-5 h-5 rounded-full bg-[#5EE6FF] text-[#07070A] font-mono text-[10px] font-bold flex items-center justify-center">
+              <span className="w-5 h-5 rounded-full bg-[#5EE6FF] text-[#07070A] font-mono text-xs font-bold flex items-center justify-center">
                 {activeNegotiationsCount}
               </span>
             )}
@@ -253,7 +255,7 @@ export const CustomerNewRequest: React.FC = () => {
         </div>
 
         <div className="text-right hidden sm:block">
-          <span className="text-[11px] text-[#A7A29A] font-mono">
+          <span className="text-xs text-[#A7A29A] font-mono">
             Customer: <strong className="text-white">{currentUser?.name}</strong>
           </span>
         </div>
@@ -269,7 +271,7 @@ export const CustomerNewRequest: React.FC = () => {
             <CheckCircle2 className="w-5 h-5 text-[#5EE6FF] shrink-0" />
             <div>
               <p className="font-heading font-bold text-white uppercase tracking-wider">{jobCreatedSuccess}</p>
-              <p className="text-[11px] text-[#A7A29A] mt-0.5 font-sans">
+              <p className="text-xs text-[#A7A29A] mt-0.5 font-sans">
                 Awaiting worker response. You can open the Negotiation Console now or switch to the Worker portal to test counter-offering.
               </p>
             </div>
@@ -299,7 +301,7 @@ export const CustomerNewRequest: React.FC = () => {
         <div className="space-y-4">
           <HudPanel variant="default" className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <span className="text-[10px] uppercase font-heading font-bold tracking-wider text-[#5EE6FF]">
+              <span className="text-xs uppercase font-heading font-bold tracking-wider text-[#5EE6FF]">
                 Live Negotiation Hub
               </span>
               <h2 className="font-heading text-xl font-black text-white tracking-wider uppercase mt-0.5">
@@ -322,7 +324,7 @@ export const CustomerNewRequest: React.FC = () => {
             <EmptyState
               icon={Handshake}
               title="No service requests placed yet"
-              description="Pick a service category and post a request to start receiving and negotiating quotes from verified nearby workers."
+              description="Pick a service category and post a request to receive and negotiate quotes with nearby workers (verified trades receive matching priority)."
               action={{
                 label: 'Create First Request',
                 onClick: () => setCustomerSubTab('create'),
@@ -353,7 +355,7 @@ export const CustomerNewRequest: React.FC = () => {
                       {/* Left: Job Meta & Category */}
                       <div className="space-y-1.5 flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-mono text-[11px] text-[#A7A29A]">Job {j.id.replace(/^job_/, '')}</span>
+                          <span className="font-mono text-xs text-[#A7A29A]">Job {j.id.replace(/^job_/, '')}</span>
                           <span className="text-xs font-heading font-black text-white uppercase tracking-wider">
                             {getCategoryLabel(j.category)}
                           </span>
@@ -361,17 +363,18 @@ export const CustomerNewRequest: React.FC = () => {
                             {j.status.toUpperCase()}
                           </Badge>
                           {isMyTurn && (
-                            <span className="px-2 py-0.5 rounded text-[10px] font-heading font-bold uppercase tracking-wider bg-[#FFB81C] text-black animate-pulse">
+                            <span className="px-2 py-0.5 rounded text-xs font-heading font-bold uppercase tracking-wider bg-[#FFB81C] text-black animate-pulse">
                               Action Required: Worker Countered
                             </span>
                           )}
                           {j.status === 'completed' && (
-                            <span className="px-2 py-0.5 rounded text-[10px] font-heading font-bold uppercase tracking-wider bg-[#5EE6FF] text-[#07070A] animate-pulse">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-heading font-bold uppercase tracking-wider bg-[#FFB81C]/15 text-[#FFB81C] border border-[#FFB81C]/40 animate-pulse">
+                              <Sparkles className="w-3.5 h-3.5 text-[#FFB81C]" />
                               Action Required: Rate Service
                             </span>
                           )}
                           {latest && (
-                            <span className="text-[10px] font-mono text-[#A7A29A]">
+                            <span className="text-xs font-mono text-[#A7A29A]">
                               Round {latest.round}/3
                             </span>
                           )}
@@ -381,7 +384,7 @@ export const CustomerNewRequest: React.FC = () => {
                           {j.description}
                         </p>
 
-                        <div className="flex items-center gap-3 text-[11px] text-[#A7A29A] font-sans">
+                        <div className="flex items-center gap-3 text-xs text-[#A7A29A] font-sans">
                           <span>
                             Worker: <strong className="text-white">{j.worker_name || 'Broadcasting to nearby'}</strong>
                           </span>
@@ -404,7 +407,7 @@ export const CustomerNewRequest: React.FC = () => {
                       {/* Right: Pricing & CTA */}
                       <div className="flex items-center justify-between md:justify-end gap-4 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-[#2A2E3A]">
                         <div className="text-right">
-                          <div className="text-[10px] uppercase font-mono text-[#A7A29A]">
+                          <div className="text-xs uppercase font-mono text-[#A7A29A]">
                             {isAccepted ? 'Agreed Price' : 'Latest Offer'}
                           </div>
                           <div className="font-heading text-lg font-black text-white tabular-nums">
@@ -448,7 +451,7 @@ export const CustomerNewRequest: React.FC = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] uppercase font-heading font-bold tracking-wider text-[#FFB81C]">
+                  <span className="text-xs uppercase font-heading font-bold tracking-wider text-[#FFB81C]">
                     Hyperlocal Service Dispatch
                   </span>
                   <Badge variant="neutral" size="sm">
@@ -466,27 +469,30 @@ export const CustomerNewRequest: React.FC = () => {
               {/* Stepper tracker */}
               <div className="flex items-center gap-2 bg-[#07070A] border border-[#2A2E3A] p-1.5 rounded-xl">
                 {steps.map((s, idx) => {
-                  const isPastOrActive = activeStep >= s.num;
+                  const isCompleted = activeStep > s.num;
                   const isCurrent = activeStep === s.num;
                   return (
                     <div key={s.num} className="flex items-center">
                       <button
+                        type="button"
                         onClick={() => setActiveStep(s.num)}
                         className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-heading font-bold uppercase tracking-wider transition cursor-pointer min-h-[36px] ${
                           isCurrent
                             ? 'bg-gradient-to-r from-[#8E0B16] to-[#D7261E] text-white shadow-[0_0_10px_rgba(215,38,30,0.5)] border-t border-[rgba(255,184,28,0.5)]'
-                            : isPastOrActive
-                            ? 'text-[#F4F1EC] hover:text-white'
-                            : 'text-[#6F6B65]'
+                            : isCompleted
+                            ? 'text-[#5EE6FF] hover:text-white bg-[#5EE6FF]/10 border border-[#5EE6FF]/20'
+                            : 'text-[#A7A29A] hover:text-[#A7A29A]'
                         }`}
                       >
-                        <span className="w-4 h-4 rounded-full bg-black/40 flex items-center justify-center text-[10px] font-mono font-bold">
-                          {s.num}
+                        <span className={`w-4 h-4 rounded-full flex items-center justify-center text-xs font-mono font-bold ${
+                          isCompleted ? 'bg-[#5EE6FF]/20 text-[#5EE6FF]' : 'bg-black/40'
+                        }`}>
+                          {isCompleted ? <Check className="w-3 h-3 text-[#5EE6FF]" /> : s.num}
                         </span>
                         <span className="hidden sm:inline">{s.label}</span>
                       </button>
                       {idx < steps.length - 1 && (
-                        <div className="w-3 h-0.5 bg-[#2A2E3A] mx-1" />
+                        <div className={`w-3 h-0.5 mx-1 ${isCompleted ? 'bg-[#5EE6FF]/40' : 'bg-[#2A2E3A]'}`} />
                       )}
                     </div>
                   );
@@ -497,186 +503,249 @@ export const CustomerNewRequest: React.FC = () => {
 
       {/* Main Grid: Form Sections */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column: Form */}
+        {/* Left Column: Form driven strictly by activeStep */}
         <div className="lg:col-span-7 space-y-5">
-          {/* 1. Category Selection Tiles with Gold Ring on Select */}
-          <HudPanel variant="default" className="space-y-3">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#FFD65A]">
-                1. Select Category
-              </label>
-              <span className="text-[11px] text-[#5EE6FF] font-heading uppercase font-bold">
-                {getCategoryLabel(category)}
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-              {SERVICE_CATEGORIES.map((cat) => {
-                const isSelected = category === cat.id;
-                return (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => {
-                      setCategory(cat.id);
-                      setActiveStep(2);
-                      const presets = sampleDescriptions[cat.id];
-                      if (presets && presets[0]) setDescription(presets[0]);
-                    }}
-                    className={`relative p-3 rounded-xl text-left transition duration-200 cursor-pointer flex flex-col justify-between min-h-[96px] ${
-                      isSelected
-                        ? 'bg-[#151821] border border-[#FFB81C] ring-2 ring-[#FFB81C] shadow-[0_0_20px_rgba(255,184,28,0.3)] text-white'
-                        : 'bg-[#0E1016] hover:bg-[#151821] border border-[#2A2E3A] hover:border-[#3B4150] text-[#A7A29A]'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between w-full">
-                      <div
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-                          isSelected
-                            ? 'bg-gradient-to-tr from-[#8E0B16] to-[#D7261E] text-white shadow'
-                            : 'bg-[#151821] text-[#A7A29A]'
-                        }`}
-                      >
-                        {iconMap[cat.id]}
-                      </div>
-                      {cat.id === 'cook_maid' && (
-                        <span className="text-[9px] font-heading font-bold uppercase tracking-wider text-[#FFB81C] bg-[#FFB81C]/15 px-1.5 py-0.2 rounded border border-[#FFB81C]/30">
-                          Low Conf
-                        </span>
-                      )}
-                    </div>
-                    <div>
-                      <p className="font-heading font-bold text-xs uppercase tracking-wider mt-2">{cat.name}</p>
-                      <p className="text-[10px] text-[#A7A29A] font-mono mt-0.5">Base: ~{formatINR(cat.baselinePrice)}</p>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </HudPanel>
-
-          {/* 2. Interactive Map with CartoDB Dark Tiles */}
-          <HudPanel variant="default" className="space-y-3">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#FFD65A] flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-[#FFB81C]" />
-                2. Location &amp; Radius
-              </label>
-              <div className="flex items-center gap-1 flex-wrap text-[11px]">
-                <span className="text-[#A7A29A] hidden sm:inline">Presets:</span>
-                {NEIGHBORHOODS.slice(0, 3).map((n) => (
-                  <button
-                    key={n.id}
-                    type="button"
-                    onClick={() => {
-                      setLat(n.lat);
-                      setLng(n.lng);
-                      setActiveStep(3);
-                    }}
-                    className="px-2 py-1 rounded bg-[#151821] hover:bg-[#1C202B] text-[#FFD65A] border border-[#2A2E3A] font-heading text-[10px] uppercase cursor-pointer min-h-[32px]"
-                  >
-                    {n.name.split(' ')[0]}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <MapPicker
-              lat={lat}
-              lng={lng}
-              onLocationChange={(newLat, newLng) => {
-                setLat(newLat);
-                setLng(newLng);
-                setActiveStep(3);
-              }}
-              interactivePin={true}
-              radiusKm={5}
-              heightClass="h-64 sm:h-72"
-            />
-            <div className="flex items-center justify-between text-[11px] text-[#A7A29A] font-mono">
-              <span>Pin: {lat.toFixed(4)}, {lng.toFixed(4)}</span>
-              <span className="text-[#5EE6FF]">Search radius: 5.0 km</span>
-            </div>
-          </HudPanel>
-
-          {/* 3. Description */}
-          <HudPanel variant="default" className="space-y-3">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#FFD65A]">
-                3. Describe Issue
-              </label>
-              <span className="text-[10px] text-[#A7A29A]">Click preset to fill:</span>
-            </div>
-
-            <textarea
-              rows={2}
-              value={description}
-              onChange={(e) => {
-                setDescription(e.target.value);
-                setActiveStep(4);
-              }}
-              placeholder="e.g. Leaking kitchen tap joint..."
-              className="w-full bg-[#07070A] border border-[#2A2E3A] rounded-xl px-3.5 py-2.5 text-xs text-[#F4F1EC] placeholder-[#6F6B65] focus:outline-none focus:border-[#FFB81C] transition font-sans"
-            />
-
-            {sampleDescriptions[category] && (
-              <div className="flex flex-wrap gap-1.5">
-                {sampleDescriptions[category].map((preset, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => {
-                      setDescription(preset);
-                      setActiveStep(4);
-                    }}
-                    className="text-[11px] bg-[#151821] hover:bg-[#1C202B] text-[#A7A29A] hover:text-[#F4F1EC] px-2.5 py-1.5 rounded-lg border border-[#2A2E3A] transition text-left cursor-pointer font-sans"
-                  >
-                    &ldquo;{preset.slice(0, 36)}...&rdquo;
-                  </button>
-                ))}
-              </div>
-            )}
-          </HudPanel>
-
-          {/* 4. Price Input */}
-          <HudPanel variant="default" className="space-y-3">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#FFD65A]">
-                4. Starting Offered Price
-              </label>
-              {band && (
-                <span className="text-xs text-[#5EE6FF] font-mono font-bold">
-                  Typical: {formatINR(band.typical)}
+          {/* STEP 1: Category Selection Tiles */}
+          {activeStep === 1 && (
+            <HudPanel variant="default" className="space-y-4">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#FFD65A]">
+                  Step 1: Select Category
+                </label>
+                <span className="text-xs text-[#5EE6FF] font-heading uppercase font-bold">
+                  {getCategoryLabel(category)}
                 </span>
-              )}
-            </div>
+              </div>
 
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 font-heading font-bold text-[#A7A29A] text-lg">
-                ₹
-              </span>
-              <input
-                type="number"
-                min={50}
-                step={25}
-                value={offeredPrice || ''}
-                onChange={(e) => setOfferedPrice(Number(e.target.value))}
-                className="w-full bg-[#07070A] border border-[#2A2E3A] rounded-xl pl-9 pr-4 py-3 font-heading text-xl font-black text-white focus:outline-none focus:border-[#FFB81C] tabular-nums"
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                {SERVICE_CATEGORIES.map((cat) => {
+                  const isSelected = category === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => {
+                        setCategory(cat.id);
+                        const presets = sampleDescriptions[cat.id];
+                        if (presets && presets[0]) setDescription(presets[0]);
+                      }}
+                      className={`relative p-3 rounded-xl text-left transition duration-200 cursor-pointer flex flex-col justify-between min-h-[96px] ${
+                        isSelected
+                          ? 'bg-[#151821] border border-[#FFB81C] ring-2 ring-[#FFB81C] shadow-[0_0_20px_rgba(255,184,28,0.3)] text-white'
+                          : 'bg-[#0E1016] hover:bg-[#151821] border border-[#2A2E3A] hover:border-[#3B4150] text-[#A7A29A]'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between w-full">
+                        <div
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                            isSelected
+                              ? 'bg-gradient-to-tr from-[#8E0B16] to-[#D7261E] text-white shadow'
+                              : 'bg-[#151821] text-[#A7A29A]'
+                          }`}
+                        >
+                          {iconMap[cat.id]}
+                        </div>
+                        {cat.id === 'cook_maid' && (
+                          <span className="text-xs font-heading font-bold uppercase tracking-wider text-[#FFB81C] bg-[#FFB81C]/15 px-1.5 py-0.2 rounded border border-[#FFB81C]/30">
+                            Low Conf
+                          </span>
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-heading font-bold text-xs uppercase tracking-wider mt-2">{cat.name}</p>
+                        <p className="text-xs text-[#A7A29A] font-mono mt-0.5">Base: ~{formatINR(cat.baselinePrice)}</p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="pt-2 flex justify-end">
+                <ForgeButton
+                  type="button"
+                  variant="primary"
+                  size="md"
+                  icon={ArrowRight}
+                  onClick={() => setActiveStep(2)}
+                >
+                  Next: Location
+                </ForgeButton>
+              </div>
+            </HudPanel>
+          )}
+
+          {/* STEP 2: Interactive Map with CartoDB Dark Tiles */}
+          {activeStep === 2 && (
+            <HudPanel variant="default" className="space-y-4">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#FFD65A] flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-[#FFB81C]" />
+                  Step 2: Location &amp; Radius
+                </label>
+                <div className="flex items-center gap-1 flex-wrap text-xs">
+                  <span className="text-[#A7A29A] hidden sm:inline">Presets:</span>
+                  {NEIGHBORHOODS.slice(0, 3).map((n) => (
+                    <button
+                      key={n.id}
+                      type="button"
+                      onClick={() => {
+                        setLat(n.lat);
+                        setLng(n.lng);
+                      }}
+                      className="px-2 py-1 rounded bg-[#151821] hover:bg-[#1C202B] text-[#FFD65A] border border-[#2A2E3A] font-heading text-xs uppercase cursor-pointer min-h-[32px]"
+                    >
+                      {n.name.split(' ')[0]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <MapPicker
+                lat={lat}
+                lng={lng}
+                onLocationChange={(newLat, newLng) => {
+                  setLat(newLat);
+                  setLng(newLng);
+                }}
+                interactivePin={true}
+                radiusKm={5}
+                heightClass="h-64 sm:h-72"
               />
-            </div>
-          </HudPanel>
+              <div className="flex items-center justify-between text-xs text-[#A7A29A] font-mono">
+                <span>Pin: {lat.toFixed(4)}, {lng.toFixed(4)}</span>
+                <span className="text-[#5EE6FF]">Search radius: 5.0 km</span>
+              </div>
 
-          {/* Scan Button */}
-          <ForgeButton
-            size="lg"
-            fullWidth
-            onClick={handleFindWorkers}
-            disabled={searching}
-            loading={searching}
-            icon={Search}
-          >
-            {searching ? 'Scanning Nearby Workers...' : 'Find Nearby Workers'}
-          </ForgeButton>
+              <div className="pt-2 flex items-center justify-between">
+                <ForgeButton
+                  type="button"
+                  variant="ghost"
+                  size="md"
+                  icon={ArrowLeft}
+                  onClick={() => setActiveStep(1)}
+                >
+                  Back: Category
+                </ForgeButton>
+                <ForgeButton
+                  type="button"
+                  variant="primary"
+                  size="md"
+                  icon={ArrowRight}
+                  onClick={() => setActiveStep(3)}
+                >
+                  Next: Details
+                </ForgeButton>
+              </div>
+            </HudPanel>
+          )}
+
+          {/* STEP 3: Description */}
+          {activeStep === 3 && (
+            <HudPanel variant="default" className="space-y-4">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#FFD65A]">
+                  Step 3: Describe Issue
+                </label>
+                <span className="text-xs text-[#A7A29A]">Click preset to fill:</span>
+              </div>
+
+              <textarea
+                rows={3}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="e.g. Leaking kitchen tap joint..."
+                className="w-full bg-[#07070A] border border-[#2A2E3A] rounded-xl px-3.5 py-2.5 text-xs text-[#F4F1EC] placeholder-[#8E8A82] focus:outline-none focus:border-[#FFB81C] transition font-sans"
+              />
+
+              {sampleDescriptions[category] && (
+                <div className="flex flex-wrap gap-1.5">
+                  {sampleDescriptions[category].map((preset, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setDescription(preset)}
+                      className="text-xs bg-[#151821] hover:bg-[#1C202B] text-[#A7A29A] hover:text-[#F4F1EC] px-2.5 py-1.5 rounded-lg border border-[#2A2E3A] transition text-left cursor-pointer font-sans"
+                    >
+                      &ldquo;{preset.slice(0, 36)}...&rdquo;
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <div className="pt-2 flex items-center justify-between">
+                <ForgeButton
+                  type="button"
+                  variant="ghost"
+                  size="md"
+                  icon={ArrowLeft}
+                  onClick={() => setActiveStep(2)}
+                >
+                  Back: Location
+                </ForgeButton>
+                <ForgeButton
+                  type="button"
+                  variant="primary"
+                  size="md"
+                  icon={ArrowRight}
+                  onClick={() => setActiveStep(4)}
+                >
+                  Next: Price Band
+                </ForgeButton>
+              </div>
+            </HudPanel>
+          )}
+
+          {/* STEP 4: Starting Offered Price & Scan */}
+          {activeStep === 4 && (
+            <HudPanel variant="default" className="space-y-4">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-heading font-bold uppercase tracking-wider text-[#FFD65A]">
+                  Step 4: Starting Offered Price
+                </label>
+                {band && (
+                  <span className="text-xs text-[#5EE6FF] font-mono font-bold">
+                    Typical: {formatINR(band.typical)}
+                  </span>
+                )}
+              </div>
+
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 font-heading font-bold text-[#A7A29A] text-lg">
+                  ₹
+                </span>
+                <input
+                  type="number"
+                  min={50}
+                  step={25}
+                  value={offeredPrice || ''}
+                  onChange={(e) => setOfferedPrice(Number(e.target.value))}
+                  className="w-full bg-[#07070A] border border-[#2A2E3A] rounded-xl pl-9 pr-4 py-3 font-heading text-xl font-black text-white focus:outline-none focus:border-[#FFB81C] tabular-nums"
+                />
+              </div>
+
+              <div className="pt-2 flex items-center gap-3">
+                <ForgeButton
+                  type="button"
+                  variant="ghost"
+                  size="md"
+                  icon={ArrowLeft}
+                  onClick={() => setActiveStep(3)}
+                >
+                  Back: Details
+                </ForgeButton>
+                <ForgeButton
+                  size="md"
+                  fullWidth
+                  onClick={handleFindWorkers}
+                  disabled={searching}
+                  loading={searching}
+                  icon={Search}
+                >
+                  {searching ? 'Scanning Nearby Workers...' : 'Find Nearby Workers'}
+                </ForgeButton>
+              </div>
+            </HudPanel>
+          )}
         </div>
 
         {/* Right Column: Hero PriceBandGauge */}
@@ -688,13 +757,13 @@ export const CustomerNewRequest: React.FC = () => {
             onPriceChange={(newPrice) => setOfferedPrice(newPrice)}
           />
 
-          {/* Platform Truth Card */}
+          {/* Platform Standards Card */}
           <HudPanel variant="default" className="space-y-3 text-xs text-[#A7A29A]">
             <h5 className="font-heading font-bold text-white text-xs uppercase tracking-wider flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-[#5EE6FF]" />
-              Platform Guarantees &amp; Truth
+              Fair-Price Standards
             </h5>
-            <ul className="space-y-2 text-[11px] leading-relaxed font-sans">
+            <ul className="space-y-2 text-xs leading-relaxed font-sans">
               <li className="flex items-start gap-2">
                 <span className="text-[#FFB81C] font-bold">&bull;</span>
                 <span><strong>No Price Gouging:</strong> Fair bands are calculated from real completed jobs within 10 km. Outliers removed via IQR rule.</span>
@@ -709,7 +778,7 @@ export const CustomerNewRequest: React.FC = () => {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-[#FFB81C] font-bold">&bull;</span>
-                <span><strong>Phone Masking:</strong> Numbers remain masked until a job is accepted.</span>
+                <span><strong>Phone Masking:</strong> Numbers remain masked until accepted, and are masked again once the job is rated.</span>
               </li>
             </ul>
           </HudPanel>
@@ -721,7 +790,7 @@ export const CustomerNewRequest: React.FC = () => {
         <div className="space-y-4 pt-6 border-t border-[#2A2E3A]">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <span className="text-[10px] uppercase font-heading font-bold tracking-wider text-[#5EE6FF]">
+              <span className="text-xs uppercase font-heading font-bold tracking-wider text-[#5EE6FF]">
                 Matching Radar
               </span>
               <h2 className="font-heading text-xl font-black text-white tracking-wider uppercase flex items-center gap-2">
@@ -801,7 +870,7 @@ export const CustomerNewRequest: React.FC = () => {
                                 </Badge>
                               )}
                               {index === 0 && (
-                                <span className="text-[10px] font-heading font-bold uppercase tracking-wider bg-[#FFB81C]/20 text-[#FFD65A] px-1.5 py-0.2 rounded border border-[#FFB81C]/30">
+                                <span className="text-xs font-heading font-bold uppercase tracking-wider bg-[#FFB81C]/20 text-[#FFD65A] px-1.5 py-0.2 rounded border border-[#FFB81C]/30">
                                   Best Match
                                 </span>
                               )}
@@ -825,7 +894,7 @@ export const CustomerNewRequest: React.FC = () => {
                         <div className="text-right shrink-0">
                           <div className="font-heading text-sm font-black text-white tabular-nums">
                             {formatINR(w.base_rate)}
-                            <span className="text-[10px] text-[#A7A29A] font-normal font-sans"> / job</span>
+                            <span className="text-xs text-[#A7A29A] font-normal font-sans"> / job</span>
                           </div>
                           <div className="inline-flex items-center gap-1 text-xs font-mono font-bold text-[#5EE6FF] mt-0.5">
                             <Clock className="w-3 h-3" />
@@ -837,8 +906,8 @@ export const CustomerNewRequest: React.FC = () => {
                       {/* Bottom Bar: Masked Phone & Direct Action */}
                       <div className="mt-3 pt-3 border-t border-[#2A2E3A] flex items-center justify-between text-xs">
                         <div className="flex items-center gap-2">
-                          <div className="flex items-center gap-1.5 text-[#A7A29A] font-mono text-[11px]">
-                            <Phone className="w-3.5 h-3.5 text-[#6F6B65]" />
+                          <div className="flex items-center gap-1.5 text-[#A7A29A] font-mono text-xs">
+                            <Phone className="w-3.5 h-3.5 text-[#A7A29A]" />
                             <span>{w.phone}</span>
                           </div>
                           <Badge variant={bandChipVariant} size="sm">
@@ -870,7 +939,7 @@ export const CustomerNewRequest: React.FC = () => {
                       <MapPin className="w-3.5 h-3.5 text-[#FFB81C]" />
                       Radar Map
                     </span>
-                    <span className="text-[10px] font-mono text-[#A7A29A]">
+                    <span className="text-xs font-mono text-[#A7A29A]">
                       5 km search radius
                     </span>
                   </div>
@@ -890,7 +959,7 @@ export const CustomerNewRequest: React.FC = () => {
                     <p className="font-heading font-bold text-white uppercase tracking-wider">
                       Selected: {selectedWorker.name} ({selectedWorker.eta_label})
                     </p>
-                    <p className="text-[#A7A29A] text-[11px] font-mono">
+                    <p className="text-[#A7A29A] text-xs font-mono">
                       Base rate: {formatINR(selectedWorker.base_rate)} &bull; Radius: {selectedWorker.radius_km} km
                     </p>
                   </HudPanel>

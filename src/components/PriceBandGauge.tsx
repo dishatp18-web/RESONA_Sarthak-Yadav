@@ -164,7 +164,7 @@ export const PriceBandGauge: React.FC<PriceBandGaugeProps> = ({
   const showUpdatedJustNow = justUpdated && isWithin60s;
   const computedTimeStr = band.computedAt
     ? new Date(band.computedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
-    : '';
+    : new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
 
   // Distance between user's typed price and typical median
   const priceDiffFromTypical = effectivePrice - band.typical;
@@ -192,17 +192,17 @@ export const PriceBandGauge: React.FC<PriceBandGaugeProps> = ({
                 <span
                   role="status"
                   aria-live="polite"
-                  className="px-2 py-0.5 rounded text-[10px] font-heading font-bold uppercase tracking-wider bg-[#5EE6FF]/20 text-[#5EE6FF] border border-[#5EE6FF]/40 animate-pulse"
+                  className="px-2 py-0.5 rounded text-xs font-heading font-bold uppercase tracking-wider bg-[#5EE6FF]/20 text-[#5EE6FF] border border-[#5EE6FF]/40 animate-pulse"
                 >
                   Updated just now
                 </span>
               ) : computedTimeStr ? (
-                <span className="text-[10px] font-mono text-[#A7A29A]">
+                <span className="text-xs font-mono text-[#A7A29A]">
                   Band computed at {computedTimeStr}
                 </span>
               ) : null}
             </div>
-            <p className="text-[11px] text-[#A7A29A] font-sans capitalize">
+            <p className="text-xs text-[#A7A29A] font-sans capitalize">
               {getCategoryLabel(band.category)} &bull; Bengaluru
             </p>
           </div>
@@ -211,17 +211,17 @@ export const PriceBandGauge: React.FC<PriceBandGaugeProps> = ({
         <div className="flex items-center gap-2 flex-wrap">
           {/* Typed price vs Typical median comparison chip in CAUTION style (never red) */}
           {priceDiffFromTypical < 0 ? (
-            <span className="inline-flex items-center text-[11px] font-heading font-bold px-2 py-0.5 rounded bg-[#FFB81C]/15 text-[#FFB81C] border border-[#FFB81C]/35">
+            <span className="inline-flex items-center text-xs font-heading font-bold px-2 py-0.5 rounded bg-[#FFB81C]/15 text-[#FFB81C] border border-[#FFB81C]/35">
               <ArrowDown className="w-3 h-3 mr-0.5 text-[#FFB81C]" />
               {formatINR(Math.abs(priceDiffFromTypical))} below typical
             </span>
           ) : priceDiffFromTypical > 0 ? (
-            <span className="inline-flex items-center text-[11px] font-heading font-bold px-2 py-0.5 rounded bg-[#FFB81C]/15 text-[#FFB81C] border border-[#FFB81C]/35">
+            <span className="inline-flex items-center text-xs font-heading font-bold px-2 py-0.5 rounded bg-[#FFB81C]/15 text-[#FFB81C] border border-[#FFB81C]/35">
               <ArrowUp className="w-3 h-3 mr-0.5 text-[#FFB81C]" />
               {formatINR(priceDiffFromTypical)} above typical
             </span>
           ) : (
-            <span className="inline-flex items-center text-[11px] font-heading font-bold px-2 py-0.5 rounded bg-[#5EE6FF]/15 text-[#5EE6FF] border border-[#5EE6FF]/35">
+            <span className="inline-flex items-center text-xs font-heading font-bold px-2 py-0.5 rounded bg-[#5EE6FF]/15 text-[#5EE6FF] border border-[#5EE6FF]/35">
               <CheckCircle2 className="w-3 h-3 mr-0.5 text-[#5EE6FF]" />
               Matches typical
             </span>
@@ -233,7 +233,7 @@ export const PriceBandGauge: React.FC<PriceBandGaugeProps> = ({
       {/* Hero Numbers */}
       <div className="flex items-baseline justify-between mb-5 bg-[#07070A]/80 border border-[#2A2E3A] rounded-xl p-3.5">
         <div>
-          <span className="text-[11px] uppercase tracking-wider font-heading text-[#A7A29A] block font-bold">
+          <span className="text-xs uppercase tracking-wider font-heading text-[#A7A29A] block font-bold">
             Fair Market Band
           </span>
           <span className="font-heading text-xl sm:text-2xl font-black text-white tracking-tight tabular-nums">
@@ -241,7 +241,7 @@ export const PriceBandGauge: React.FC<PriceBandGaugeProps> = ({
           </span>
         </div>
         <div className="text-right">
-          <span className="text-[11px] uppercase tracking-wider font-heading text-[#FFB81C] font-bold block">
+          <span className="text-xs uppercase tracking-wider font-heading text-[#FFB81C] font-bold block">
             Typical (Median)
           </span>
           <span className="font-heading text-lg sm:text-xl font-bold text-[#FFD65A] tabular-nums">
@@ -294,7 +294,7 @@ export const PriceBandGauge: React.FC<PriceBandGaugeProps> = ({
               style={{ left: `${typicalPct}%` }}
               className="absolute top-2 bottom-5 w-0.5 bg-[#FFD65A] -translate-x-1/2 pointer-events-none transition-all duration-500 z-10 shadow-[0_0_8px_#FFD65A]"
             >
-              <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-[#0E1016] text-[#FFD65A] border border-[#FFB81C]/50 text-[10px] font-heading font-bold px-1.5 py-0.5 rounded whitespace-nowrap shadow-lg">
+              <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-[#0E1016] text-[#FFD65A] border border-[#FFB81C]/50 text-xs font-heading font-bold px-1.5 py-0.5 rounded whitespace-nowrap shadow-lg">
                 Typ: {formatINR(band.typical)}
               </div>
             </div>
@@ -302,13 +302,13 @@ export const PriceBandGauge: React.FC<PriceBandGaugeProps> = ({
             {/* Low and High Indicators */}
             <div
               style={{ left: `${lowPct}%` }}
-              className="absolute bottom-0 -translate-x-1/2 text-[10px] font-mono text-[#A7A29A]"
+              className="absolute bottom-0 -translate-x-1/2 text-xs font-mono text-[#A7A29A]"
             >
               {formatINR(band.low)}
             </div>
             <div
               style={{ left: `${highPct}%` }}
-              className="absolute bottom-0 -translate-x-1/2 text-[10px] font-mono text-[#A7A29A]"
+              className="absolute bottom-0 -translate-x-1/2 text-xs font-mono text-[#A7A29A]"
             >
               {formatINR(band.high)}
             </div>
@@ -328,7 +328,7 @@ export const PriceBandGauge: React.FC<PriceBandGaugeProps> = ({
               {/* Floating Pill Label BELOW the track */}
               <div
                 style={{ borderColor: `${statusColor}60`, backgroundColor: '#07070A' }}
-                className={`text-[10px] font-heading font-bold px-2 py-0.5 rounded border shadow-2xl flex items-center gap-1 whitespace-nowrap transition-all duration-200 ${
+                className={`text-xs font-heading font-bold px-2 py-0.5 rounded border shadow-2xl flex items-center gap-1 whitespace-nowrap transition-all duration-200 ${
                   isCloseToTypical ? 'mt-3.5' : 'mt-1.5'
                 }`}
               >
@@ -364,7 +364,7 @@ export const PriceBandGauge: React.FC<PriceBandGaugeProps> = ({
           <p className="font-heading font-bold text-white text-xs uppercase tracking-wider">
             {status === 'fair' ? 'Within Fair Band' : statusLabel}
           </p>
-          <p className="text-[11px] text-[#F4F1EC] mt-0.5 leading-relaxed font-sans">
+          <p className="text-xs text-[#F4F1EC] mt-0.5 leading-relaxed font-sans">
             {perspectiveHelper}
           </p>
         </div>
@@ -373,25 +373,25 @@ export const PriceBandGauge: React.FC<PriceBandGaugeProps> = ({
       {/* Quick Tap Snap Chips */}
       {triggerChange && (
         <div className="flex items-center gap-2 mt-3 pt-3 border-t border-[#2A2E3A] text-xs">
-          <span className="text-[11px] text-[#A7A29A] font-heading uppercase font-bold">Snap to:</span>
+          <span className="text-xs text-[#A7A29A] font-heading uppercase font-bold">Snap to:</span>
           <button
             type="button"
             onClick={() => triggerChange(band.low)}
-            className="px-2.5 py-1 rounded bg-[#151821] hover:bg-[#1C202B] text-[#F4F1EC] border border-[#2A2E3A] text-[11px] font-mono transition cursor-pointer"
+            className="px-2.5 py-1 rounded bg-[#151821] hover:bg-[#1C202B] text-[#F4F1EC] border border-[#2A2E3A] text-xs font-mono transition cursor-pointer"
           >
             Low: {formatINR(band.low)}
           </button>
           <button
             type="button"
             onClick={() => triggerChange(band.typical)}
-            className="px-2.5 py-1 rounded bg-[#FFB81C]/15 hover:bg-[#FFB81C]/25 text-[#FFD65A] border border-[#FFB81C]/40 text-[11px] font-mono font-bold transition cursor-pointer"
+            className="px-2.5 py-1 rounded bg-[#FFB81C]/15 hover:bg-[#FFB81C]/25 text-[#FFD65A] border border-[#FFB81C]/40 text-xs font-mono font-bold transition cursor-pointer"
           >
             Typical: {formatINR(band.typical)}
           </button>
           <button
             type="button"
             onClick={() => triggerChange(band.high)}
-            className="px-2.5 py-1 rounded bg-[#151821] hover:bg-[#1C202B] text-[#F4F1EC] border border-[#2A2E3A] text-[11px] font-mono transition cursor-pointer"
+            className="px-2.5 py-1 rounded bg-[#151821] hover:bg-[#1C202B] text-[#F4F1EC] border border-[#2A2E3A] text-xs font-mono transition cursor-pointer"
           >
             High: {formatINR(band.high)}
           </button>
@@ -418,10 +418,10 @@ export const PriceBandGauge: React.FC<PriceBandGaugeProps> = ({
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden text-[11px] text-[#A7A29A] mt-2 space-y-1.5 bg-[#07070A] p-3 rounded-xl border border-[#2A2E3A] font-sans"
+              className="overflow-hidden text-xs text-[#A7A29A] mt-2 space-y-1.5 bg-[#07070A] p-3 rounded-xl border border-[#2A2E3A] font-sans"
             >
               <p className="text-[#F4F1EC] font-medium">{band.explanation}</p>
-              <ul className="list-disc list-inside space-y-1 text-[#A7A29A] text-[10px]">
+              <ul className="list-disc list-inside space-y-1 text-[#A7A29A] text-xs">
                 <li><strong>Outlier Removal:</strong> Values outside Q1 - 1.5&times;IQR and Q3 + 1.5&times;IQR are eliminated automatically.</li>
                 <li><strong>Anti-Gaming Cap:</strong> Max 2 jobs per customer-worker pair per 7-day rolling window.</li>
                 <li><strong>Weekly Velocity Bound:</strong> Band movements are capped at &plusmn;10% week-over-week.</li>
