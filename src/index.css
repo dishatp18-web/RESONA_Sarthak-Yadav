@@ -1,0 +1,30 @@
+@import "tailwindcss";
+@import "./theme.css";
+
+/* Indian Currency Formatter helper style */
+.currency-inr::before {
+  content: '₹';
+  margin-right: 2px;
+}
+
+/* Custom Scrollbar for Cockpit */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-void);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--steel);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--steel-light);
+}
+::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
