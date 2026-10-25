@@ -20,13 +20,17 @@ export const MoreSheet: React.FC<MoreSheetProps> = ({
   onClose,
   onNavigate,
 }) => {
-  const { 
-    users, 
-    currentUser, 
-    currentRole, 
-    switchRole, 
-    selectUser, 
-    resetDatabase 
+  const {
+    users,
+    currentUser,
+    currentRole,
+    switchRole,
+    selectUser,
+    resetDatabase,
+    isAuthenticated,
+    loginWithEmail,
+    registerAccount,
+    logout,
   } = useDemoUser();
   const { showToast } = useToast();
 

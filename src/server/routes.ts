@@ -4,6 +4,7 @@
 import { Router } from 'express';
 import path from 'node:path';
 import fs from 'node:fs';
+import { createHash, pbkdf2Sync, randomBytes, timingSafeEqual } from 'node:crypto';
 import multer from 'multer';
 import { CONFIG, NEIGHBORHOODS, SERVICE_CATEGORIES } from '../config.js';
 import { getDb, resetDatabase } from './db.js';
@@ -43,11 +44,337 @@ const upload = multer({
   },
 });
 
+function normalizeEmail(value: unknown): string {
+  return String(value ?? '').trim().toLowerCase();
+}
+
+function hashPassword(password: string): string {
+  const salt = randomBytes(16).toString('hex');
+  const hash = pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
+  return `${salt}:${hash}`;
+}
+
+function verifyPassword(password: string, storedHash: string | null): boolean {
+  if (!storedHash || typeof storedHash !== 'string') return false;
+  const [salt, expectedHash] = storedHash.split(':');
+  if (!salt || !expectedHash) return false;
+  const candidateHash = pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
+  if (candidateHash.length !== expectedHash.length) return false;
+  try {
+    return timingSafeEqual(Buffer.from(candidateHash, 'hex'), Buffer.from(expectedHash, 'hex'));
+  } catch {
+    return false;
+  }
+}
+
+function getRequestToken(req: any): string | null {
+  const rawHeader = req.headers['x-session-token'] ?? req.headers.authorization ?? req.headers['Authorization'];
+  const value = Array.isArray(rawHeader) ? rawHeader[0] : rawHeader;
+  if (!value) return null;
+  const headerValue = String(value).trim();
+  return headerValue.startsWith('Bearer ') ? headerValue.slice(7).trim() : headerValue;
+}
+
+function createSessionToken(userId: string) {
+  const token = randomBytes(24).toString('hex');
+  const db = getDb();
+  const now = new Date().toISOString();
+  const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7).toISOString();
+  const hash = createHash('sha256').update(token).digest('hex');
+
+  db.prepare(`
+    INSERT INTO sessions (id, user_id, token_hash, created_at, expires_at, last_seen_at)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `).run(`sess_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`, userId, hash, now, expiresAt, now);
+
+  return { token, expiresAt };
+}
+
+function getSessionUser(req: any): any | null {
+  const token = getRequestToken(req);
+  if (!token) {
+    const demoUserId = (req.headers['x-demo-user-id'] || req.query?.userId || req.body?.user_id) as string | undefined;
+    if (!demoUserId) return null;
+    const db = getDb();
+    const user = db.prepare(`SELECT * FROM users WHERE id = ?`).get(demoUserId) as any;
+    return user || null;
+  }
+
+  const hash = createHash('sha256').update(token).digest('hex');
+  const db = getDb();
+  const row = db.prepare(`
+    SELECT u.*
+    FROM sessions s
+    JOIN users u ON u.id = s.user_id
+    WHERE s.token_hash = ? AND s.expires_at > ?
+  `).get(hash, new Date().toISOString()) as any;
+
+  if (!row) return null;
+  db.prepare(`UPDATE sessions SET last_seen_at = ? WHERE token_hash = ?`).run(new Date().toISOString(), hash);
+  return row;
+}
+
+function sanitizeUser(row: any): any {
+  if (!row) return null;
+  const { password_hash, ...safe } = row;
+  return {
+    ...safe,
+    email: row.email ?? null,
+    profile_picture_path: row.profile_picture_path ?? null,
+    is_active: Boolean(row.is_active ?? true),
+  };
+}
+
+function requireAuth(req: any, res: any, next: () => void): void {
+  const user = getSessionUser(req);
+  if (!user) {
+    return res.status(401).json({ error: 'Authentication required.' });
+  }
+  (req as any).user = user;
+  next();
+}
+
+function requireRole(req: any, res: any, next: () => void, roles: string[]) {
+  const user = getSessionUser(req) || (req as any).user;
+  if (!user || !roles.includes(user.role)) {
+    return res.status(403).json({ error: 'Forbidden: insufficient role permissions.' });
+  }
+  next();
+}
+
 // Demo Reset Endpoint
 apiRouter.post('/reset', (_req, res) => {
   resetDatabase();
   seedData();
   res.json({ success: true, message: 'Database reset and re-seeded with demo data' });
+});
+
+apiRouter.post('/auth/register', (req, res) => {
+  const { name, email, password, phone, role, categories, lat, lng, base_rate, radius_km } = req.body ?? {};
+
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: 'Name, email, and password are required.' });
+  }
+
+  const safeRole = String(role || 'customer');
+  if (!['customer', 'worker'].includes(safeRole)) {
+    return res.status(403).json({ error: 'Only customer and worker roles can self-register.' });
+  }
+
+  if (String(password).length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters.' });
+  }
+
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+    return res.status(400).json({ error: 'A valid email address is required.' });
+  }
+
+  const db = getDb();
+  const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(normalizedEmail) as any;
+  if (existing) {
+    return res.status(409).json({ error: 'An account with this email already exists.' });
+  }
+
+  const userId = `user_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  const now = new Date().toISOString();
+  const cleanPhone = String(phone ?? '').trim() || '';
+  const safeLat = Number(lat ?? 0);
+  const safeLng = Number(lng ?? 0);
+
+  db.prepare(`
+    INSERT INTO users (id, name, role, phone, email, password_hash, lat, lng, profile_picture_path, created_at, updated_at, is_active)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, 1)
+  `).run(userId, String(name).trim(), safeRole, cleanPhone, normalizedEmail, hashPassword(String(password)), safeLat, safeLng, now, now);
+
+  if (safeRole === 'worker') {
+    const parsedCategories = Array.isArray(categories) ? categories : typeof categories === 'string' ? [categories] : [];
+    db.prepare(`
+      INSERT INTO workers (user_id, categories, base_rate, rate_unit, radius_km, available, verification_status, verification_doc_path, verification_reject_reason, is_flagged, is_suspended, rating_avg, rating_count, jobs_completed)
+      VALUES (?, ?, ?, 'per_job', ?, 1, 'pending', NULL, NULL, 0, 0, 0, 0, 0)
+    `).run(userId, JSON.stringify(parsedCategories), Number(base_rate ?? 0) || 0, Number(radius_km ?? 5) || 5);
+  }
+
+  const session = createSessionToken(userId);
+  const user = sanitizeUser(db.prepare(`SELECT * FROM users WHERE id = ?`).get(userId) as any);
+
+  return res.status(201).json({
+    success: true,
+    token: session.token,
+    expires_at: session.expiresAt,
+    user,
+  });
+});
+
+apiRouter.post('/auth/login', (req, res) => {
+  const { email, password } = req.body ?? {};
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required.' });
+  }
+
+  const normalizedEmail = normalizeEmail(email);
+  const db = getDb();
+  const user = db.prepare(`SELECT * FROM users WHERE email = ? AND is_active = 1`).get(normalizedEmail) as any;
+  if (!user || !user.password_hash) {
+    return res.status(401).json({ error: 'Invalid credentials.' });
+  }
+
+  if (!verifyPassword(String(password), user.password_hash)) {
+    return res.status(401).json({ error: 'Invalid credentials.' });
+  }
+
+  const session = createSessionToken(user.id);
+  db.prepare(`UPDATE users SET updated_at = ? WHERE id = ?`).run(new Date().toISOString(), user.id);
+
+  return res.json({
+    success: true,
+    token: session.token,
+    expires_at: session.expiresAt,
+    user: sanitizeUser(user),
+  });
+});
+
+apiRouter.post('/auth/logout', (req, res) => {
+  const token = getRequestToken(req);
+  if (!token) {
+    return res.status(200).json({ success: true, message: 'No active session to end.' });
+  }
+
+  const db = getDb();
+  const hash = createHash('sha256').update(token).digest('hex');
+  db.prepare('DELETE FROM sessions WHERE token_hash = ?').run(hash);
+  return res.json({ success: true, message: 'Logged out successfully.' });
+});
+
+apiRouter.get('/auth/me', (req, res) => {
+  const user = getSessionUser(req);
+  if (!user) {
+    return res.status(401).json({ error: 'Authentication required.' });
+  }
+
+  return res.json({ user: sanitizeUser(user) });
+});
+
+apiRouter.get('/profile', (req, res) => {
+  const user = getSessionUser(req) || (
+    req.headers['x-demo-user-id'] ? getDb().prepare('SELECT * FROM users WHERE id = ?').get(String(req.headers['x-demo-user-id'])) : null
+  );
+
+  if (!user) {
+    return res.status(401).json({ error: 'Authentication required.' });
+  }
+
+  return res.json({ user: sanitizeUser(user) });
+});
+
+apiRouter.patch('/profile', (req, res) => {
+  const user = getSessionUser(req);
+  if (!user) {
+    return res.status(401).json({ error: 'Authentication required.' });
+  }
+
+  const { name, phone, lat, lng, profile_picture_path } = req.body ?? {};
+  const db = getDb();
+  const nextName = typeof name === 'string' && name.trim() ? name.trim() : user.name;
+  const nextPhone = typeof phone === 'string' ? phone.trim() : user.phone ?? '';
+  const nextLat = typeof lat === 'number' ? lat : Number(user.lat ?? 0);
+  const nextLng = typeof lng === 'number' ? lng : Number(user.lng ?? 0);
+  const nextProfilePicture = typeof profile_picture_path === 'string' ? profile_picture_path : user.profile_picture_path ?? null;
+
+  db.prepare(`
+    UPDATE users
+    SET name = ?, phone = ?, lat = ?, lng = ?, profile_picture_path = ?, updated_at = ?
+    WHERE id = ?
+  `).run(nextName, nextPhone, nextLat, nextLng, nextProfilePicture, new Date().toISOString(), user.id);
+
+  const updated = sanitizeUser(db.prepare('SELECT * FROM users WHERE id = ?').get(user.id) as any);
+  return res.json({ success: true, user: updated });
+});
+
+apiRouter.post('/profile/avatar', upload.single('avatar'), (req, res) => {
+  const user = getSessionUser(req);
+  if (!user) {
+    return res.status(401).json({ error: 'Authentication required.' });
+  }
+
+  if (!req.file) {
+    return res.status(400).json({ error: 'An image upload is required.' });
+  }
+
+  const db = getDb();
+  const relativePath = `/uploads/${req.file.filename}`;
+  db.prepare(`UPDATE users SET profile_picture_path = ?, updated_at = ? WHERE id = ?`).run(relativePath, new Date().toISOString(), user.id);
+
+  const updated = sanitizeUser(db.prepare('SELECT * FROM users WHERE id = ?').get(user.id) as any);
+  return res.json({ success: true, user: updated, profile_picture_path: relativePath });
+});
+
+apiRouter.post('/service-requests', (req, res) => {
+  const { customer_id, category, title, description, lat, lng, address, preferred_time, urgency } = req.body ?? {};
+
+  if (!customer_id || !category || !title || !description) {
+    return res.status(400).json({ error: 'customer_id, category, title, and description are required.' });
+  }
+
+  const db = getDb();
+  const user = db.prepare('SELECT id, role FROM users WHERE id = ?').get(customer_id) as any;
+  if (!user || user.role !== 'customer') {
+    return res.status(403).json({ error: 'Only customers can create service requests.' });
+  }
+
+  const requestId = `sr_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  const now = new Date().toISOString();
+  db.prepare(`
+    INSERT INTO service_requests (id, customer_id, category, title, description, lat, lng, address, preferred_time, urgency, status, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'open', ?, ?)
+  `).run(requestId, customer_id, String(category), String(title), String(description), Number(lat ?? 0), Number(lng ?? 0), address ?? null, preferred_time ?? null, urgency ?? 'normal', now, now);
+
+  return res.status(201).json({ success: true, request: { id: requestId, customer_id, category, title, description, lat: Number(lat ?? 0), lng: Number(lng ?? 0), address: address ?? null, preferred_time: preferred_time ?? null, urgency: urgency ?? 'normal', status: 'open', created_at: now } });
+});
+
+apiRouter.get('/service-requests', (req, res) => {
+  const { customer_id } = req.query;
+  const db = getDb();
+  const query = customer_id
+    ? 'SELECT * FROM service_requests WHERE customer_id = ? ORDER BY created_at DESC'
+    : 'SELECT * FROM service_requests ORDER BY created_at DESC';
+  const params = customer_id ? [String(customer_id)] : [];
+  const rows = db.prepare(query).all(...params) as any[];
+  return res.json(rows);
+});
+
+apiRouter.get('/service-requests/:id', (req, res) => {
+  const db = getDb();
+  const request = db.prepare('SELECT * FROM service_requests WHERE id = ?').get(req.params.id) as any;
+  if (!request) {
+    return res.status(404).json({ error: 'Service request not found.' });
+  }
+
+  const images = db.prepare('SELECT * FROM service_request_images WHERE service_request_id = ? ORDER BY created_at DESC').all(request.id) as any[];
+  return res.json({ ...request, images });
+});
+
+apiRouter.post('/service-requests/:id/images', upload.single('image'), (req, res) => {
+  const { id } = req.params;
+  if (!req.file) {
+    return res.status(400).json({ error: 'An image upload is required.' });
+  }
+
+  const db = getDb();
+  const request = db.prepare('SELECT id FROM service_requests WHERE id = ?').get(id) as any;
+  if (!request) {
+    return res.status(404).json({ error: 'Service request not found.' });
+  }
+
+  const now = new Date().toISOString();
+  const imageId = `img_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  const relativePath = `/uploads/${req.file.filename}`;
+  db.prepare(`
+    INSERT INTO service_request_images (id, service_request_id, path, mime_type, created_at)
+    VALUES (?, ?, ?, ?, ?)
+  `).run(imageId, id, relativePath, req.file.mimetype || 'image/jpeg', now);
+
+  return res.status(201).json({ success: true, image: { id: imageId, path: relativePath, mime_type: req.file.mimetype || 'image/jpeg', created_at: now } });
 });
 
 // 1. Config endpoint
