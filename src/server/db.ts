@@ -6,12 +6,25 @@ import { DatabaseSync } from 'node:sqlite';
 import path from 'node:path';
 import fs from 'node:fs';
 
-const DB_FILE = path.resolve(process.cwd(), 'fairfix.sqlite');
+const isVercel = Boolean(process.env.VERCEL);
+const DB_FILE = isVercel
+  ? path.resolve('/tmp', 'fairfix.sqlite')
+  : path.resolve(process.cwd(), 'fairfix.sqlite');
 
 let dbInstance: DatabaseSync | null = null;
 
 export function getDb(): DatabaseSync {
   if (!dbInstance) {
+    if (isVercel && !fs.existsSync(DB_FILE)) {
+      const bundledDb = path.resolve(process.cwd(), 'fairfix.sqlite');
+      if (fs.existsSync(bundledDb)) {
+        try {
+          fs.copyFileSync(bundledDb, DB_FILE);
+        } catch (e) {
+          console.warn('[FairFix DB] Failed to copy bundled DB to /tmp, initializing fresh:', e);
+        }
+      }
+    }
     dbInstance = new DatabaseSync(DB_FILE);
     dbInstance.exec('PRAGMA foreign_keys = ON;');
     initSchema(dbInstance);
