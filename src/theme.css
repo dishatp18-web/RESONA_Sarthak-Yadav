@@ -1,182 +1,143 @@
 /**
- * FairFix "Mark III Forge" Design System Tokens
- * Dark metallic cockpit, deep red and warm gold armor, with cyan live status accents.
+ * FairFix Design System - "Calm" Edition
+ * Warm cream background, terracotta headlines & primary pill buttons,
+ * generous whitespace, accessible contrast, editorial typography.
  */
 :root {
-  /* Surfaces & Text */
-  --bg-void: #07070A;
-  --bg-panel: #0E1016;
-  --bg-raised: #151821;
-  --steel: #2A2E3A;
-  --steel-light: #3B4150;
-  --text: #F4F1EC;
-  --text-dim: #A7A29A;
-  --text-faint: #6F6B65;
+  /* Surfaces & Canvas */
+  --bg: #FCF5E8;
+  --surface: #FFFBF3;
+  --line: #EADFC9;
+  --chip: #F4EBDA;
+  --ink: #2A1B12;
+  --muted: #6B5B4E;
+  --accent: #B5541E;
+  --on-accent: #FFFFFF;
 
-  /* Brand Armor */
-  --red-deep: #8E0B16;
-  --red: #D7261E;
-  --red-hot: #FF4A2B;
-  --orange: #F26B1D;
-  --gold: #FFB81C;
-  --gold-bright: #FFD65A;
+  /* Status Colors (Used ONLY on actual status chips/dots) */
+  --fair: #059669;
+  --fair-bg: rgba(5, 150, 105, 0.1);
+  --caution: #B45309;
+  --caution-bg: rgba(180, 83, 9, 0.1);
+  --danger: #DC2626;
+  --danger-bg: rgba(220, 38, 38, 0.1);
 
-  /* Status Colors (The ONLY status colors allowed) */
-  --fair: #5EE6FF;     /* within band, live, verified, success */
-  --caution: #FFB81C;  /* below/above band, low confidence */
-  --danger: #FF5C6C;   /* destructive only: reject, report, dispute, cancel */
+  /* Typography */
+  --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Gradients */
-  --grad-forge: linear-gradient(135deg, #8E0B16 0%, #D7261E 35%, #F26B1D 70%, #FFB81C 100%);
-  --grad-hairline: linear-gradient(90deg, transparent, #FFB81C, transparent);
-
-  /* Fonts */
-  --font-heading: 'Rajdhani', -apple-system, sans-serif;
-  --font-body: 'Inter', -apple-system, sans-serif;
+  /* Shapes & Shadows */
+  --radius-card: 20px;
+  --radius-pill: 9999px;
+  --shadow-card: 0 8px 24px rgba(42, 27, 18, 0.06);
 }
 
-body {
-  background-color: var(--bg-void);
-  color: var(--text);
+html, body {
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background-color: var(--bg);
+  color: var(--ink);
   font-family: var(--font-body);
-  overflow-x: hidden;
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
 }
 
+/* Headings */
 h1, h2, h3, h4, h5, h6, .font-heading {
   font-family: var(--font-heading);
-  letter-spacing: 0.04em;
-  font-weight: 700;
+  color: var(--ink);
 }
 
-.font-rajdhani {
+/* Typography scale per Calm rules:
+   Display: 40/44 mobile, 64/68 desktop, accent, tracking -0.03em
+   H2: 24/30, 700 weight
+   Body: 16/24, 400/500
+   Small: 14/20
+   Caption: 12/16 (minimum size everywhere)
+*/
+.text-display {
   font-family: var(--font-heading);
+  font-size: 40px;
+  line-height: 44px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.03em;
 }
-
-.tabular-nums {
-  font-variant-numeric: tabular-nums;
-}
-
-.micro-label {
-  font-family: var(--font-heading);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 600;
-  font-size: 11px;
-}
-
-/* Background Atmosphere: Hex-Grid + Radial Glows + Scanlines */
-.forge-bg {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
-}
-
-/* Faint Hex Grid pattern (4% opacity) */
-.forge-hex-grid {
-  position: absolute;
-  inset: 0;
-  opacity: 0.04;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cpath fill-rule='evenodd' stroke='%23FFB81C' stroke-width='1' fill='none' d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.89l11-6.35 11 6.35v12.72l-11 6.35-11-6.35V17.89z'/%3E%3C/svg%3E");
-  background-size: 28px 49px;
-}
-
-/* Static Scanlines (3% opacity) */
-.forge-scanlines {
-  position: absolute;
-  inset: 0;
-  opacity: 0.03;
-  background: linear-gradient(rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.8) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-  background-size: 100% 3px, 6px 100%;
-}
-
-/* Radial Glow 1: Red Deep Glow top-left (18% opacity, 45s drift) */
-.forge-glow-red {
-  position: absolute;
-  top: -20%;
-  left: -10%;
-  width: 60vw;
-  height: 60vw;
-  max-width: 800px;
-  max-height: 800px;
-  background: radial-gradient(circle, rgba(215, 38, 30, 0.18) 0%, rgba(215, 38, 30, 0) 70%);
-  filter: blur(80px);
-  animation: forge-drift-red 45s infinite alternate ease-in-out;
-  transform: translate3d(0, 0, 0);
-}
-
-/* Radial Glow 2: Gold Warm Glow bottom-right (10% opacity, 45s drift) */
-.forge-glow-gold {
-  position: absolute;
-  bottom: -20%;
-  right: -10%;
-  width: 55vw;
-  height: 55vw;
-  max-width: 750px;
-  max-height: 750px;
-  background: radial-gradient(circle, rgba(255, 184, 28, 0.10) 0%, rgba(255, 184, 28, 0) 70%);
-  filter: blur(80px);
-  animation: forge-drift-gold 45s infinite alternate-reverse ease-in-out;
-  transform: translate3d(0, 0, 0);
-}
-
-@keyframes forge-drift-red {
-  0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(6vw, 4vh, 0) scale(1.08); }
-  100% { transform: translate3d(-4vw, 8vh, 0) scale(0.94); }
-}
-
-@keyframes forge-drift-gold {
-  0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(-6vw, -5vh, 0) scale(1.06); }
-  100% { transform: translate3d(5vw, 4vh, 0) scale(0.92); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .forge-glow-red, .forge-glow-gold {
-    animation: none !important;
+@media (min-width: 768px) {
+  .text-display {
+    font-size: 64px;
+    line-height: 68px;
   }
 }
 
-/* HudPanel: Metallic Cockpit Panel with 4 Corner Brackets */
-.hud-panel {
-  position: relative;
-  background: rgba(21, 24, 33, 0.72);
-  border: 1px solid rgba(255, 184, 28, 0.18);
-  border-radius: 12px;
-  transition: border-color 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1), transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+.text-h2 {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
 }
 
-/* HudPanel: Clean metallic cockpit panel without stray edge chevrons */
-.hud-panel-brackets::before,
-.hud-panel-brackets::after {
-  display: none;
+.text-body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: var(--ink);
 }
 
-.hud-panel:hover {
-  border-color: rgba(255, 184, 28, 0.45);
-  box-shadow: 0 0 24px rgba(215, 38, 30, 0.25);
+.text-small {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: var(--muted);
 }
 
-/* Focus Ring Specification */
+.text-caption {
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+/* Focus styles: 2px ink with 2px offset */
 button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-  outline: 2px solid var(--gold) !important;
+  outline: 2px solid var(--ink) !important;
   outline-offset: 2px !important;
 }
 
-/* Text Gradient Utilities for Big Headings & Hero Numbers */
-.text-grad-forge {
-  background: var(--grad-forge);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Calm Cards: radius 20, 1px border OR shadow, never both */
+.calm-card {
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 16px;
+  color: var(--ink);
 }
 
-.text-grad-gold {
-  background: linear-gradient(135deg, #FFD65A 0%, #FFB81C 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.calm-card-shadow {
+  background-color: var(--surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 16px;
+  color: var(--ink);
+}
+
+/* Legacy compatibility classes mapped to Calm */
+.hud-panel {
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 16px;
+  color: var(--ink);
+}
+
+.forge-bg, .forge-glow-gold, .forge-glow-red, .forge-hex-grid, .forge-scanlines {
+  display: none !important;
 }

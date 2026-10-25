@@ -1,22 +1,19 @@
 /**
- * FairFix Public Read-Only Trip Tracker
+ * FairFix Public Read-Only Trip Tracker: Calm Edition
  * Served at /track/:token
- * Shows live dispatch status and worker location trail without requiring login.
+ * Shows live dispatch status and worker location trail.
  * Expires immediately when the job is completed or cancelled.
  */
 import React, { useState, useEffect } from 'react';
-import { HudPanel, Badge, ArcLoader, formatINR } from './ui/index.js';
+import { Card, ArcLoader, PrimaryButton, formatINR } from './ui/index.js';
 import { getCategoryLabel } from '../config.js';
 import { 
   ShieldCheck, 
-  MapPin, 
   Clock, 
   CheckCircle2, 
   AlertTriangle, 
-  UserCheck, 
-  ExternalLink,
   Navigation,
-  Lock
+  ArrowLeft
 } from 'lucide-react';
 
 interface PublicTrackerProps {
@@ -53,10 +50,10 @@ export const PublicTracker: React.FC<PublicTrackerProps> = ({ token, onBackToApp
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#07070A] flex flex-col items-center justify-center p-4 text-[#F4F1EC]">
+      <div className="min-h-screen bg-[#FCF5E8] flex flex-col items-center justify-center p-6 text-[#2A1B12]">
         <ArcLoader size="lg" className="mb-4" />
-        <p className="font-heading font-bold uppercase text-sm tracking-wider">
-          Connecting Live Dispatch Telemetry...
+        <p className="font-heading font-bold text-base text-[#2A1B12]">
+          Loading tracking data...
         </p>
       </div>
     );
@@ -64,47 +61,42 @@ export const PublicTracker: React.FC<PublicTrackerProps> = ({ token, onBackToApp
 
   if (error || !data) {
     return (
-      <div className="min-h-screen bg-[#07070A] flex flex-col items-center justify-center p-4 text-[#F4F1EC]">
-        <div className="max-w-md w-full bg-[#0E1016] border border-[#2A2E3A] rounded-2xl p-6 text-center space-y-4">
-          <AlertTriangle className="w-10 h-10 text-[#FFB81C] mx-auto" />
-          <h2 className="font-heading font-bold text-lg uppercase text-white">Tracking Link Expired or Invalid</h2>
-          <p className="text-xs text-[#A7A29A]">
-            {error || 'This live link has concluded and its location telemetry has been deleted from servers.'}
+      <div className="min-h-screen bg-[#FCF5E8] flex flex-col items-center justify-center p-6 text-[#2A1B12]">
+        <Card className="max-w-md w-full p-8 text-center space-y-4">
+          <AlertTriangle className="w-10 h-10 text-[#B45309] mx-auto" />
+          <h2 className="font-heading font-bold text-[20px] text-[#2A1B12]">
+            Link Expired or Invalid
+          </h2>
+          <p className="text-[14px] text-[#6B5B4E]">
+            {error || 'This live link has concluded and its location telemetry has been deleted.'}
           </p>
           {onBackToApp && (
-            <button
-              onClick={onBackToApp}
-              className="px-4 py-2 bg-[#FFB81C] text-black font-heading font-bold uppercase text-xs rounded-xl hover:bg-[#FFD65A]"
-            >
+            <PrimaryButton fullWidth onClick={onBackToApp}>
               Return to FairFix
-            </button>
+            </PrimaryButton>
           )}
-        </div>
+        </Card>
       </div>
     );
   }
 
   if (data.expired) {
     return (
-      <div className="min-h-screen bg-[#07070A] flex flex-col items-center justify-center p-4 text-[#F4F1EC]">
-        <div className="max-w-md w-full bg-[#0E1016] border border-[#2A2E3A] rounded-2xl p-6 text-center space-y-4">
-          <CheckCircle2 className="w-10 h-10 text-[#5EE6FF] mx-auto" />
-          <h2 className="font-heading font-bold text-lg uppercase text-white">Trip Concluded</h2>
-          <Badge variant="fair" size="md">
-            Job Status: {data.status}
-          </Badge>
-          <p className="text-xs text-[#A7A29A] font-sans">
-            This tracking link has expired because the job has reached completion. For privacy, worker location fixes are permanently wiped upon job completion.
+      <div className="min-h-screen bg-[#FCF5E8] flex flex-col items-center justify-center p-6 text-[#2A1B12]">
+        <Card className="max-w-md w-full p-8 text-center space-y-4">
+          <CheckCircle2 className="w-10 h-10 text-[#059669] mx-auto" />
+          <h2 className="font-heading font-bold text-[20px] text-[#2A1B12]">
+            Trip Concluded
+          </h2>
+          <p className="text-[14px] text-[#6B5B4E]">
+            This repair has reached completion. For privacy, worker location fixes are permanently removed upon job completion.
           </p>
           {onBackToApp && (
-            <button
-              onClick={onBackToApp}
-              className="px-4 py-2 bg-[#5EE6FF] text-black font-heading font-bold uppercase text-xs rounded-xl hover:bg-[#5EE6FF]/80"
-            >
-              Open FairFix Cockpit
-            </button>
+            <PrimaryButton fullWidth onClick={onBackToApp}>
+              Open FairFix
+            </PrimaryButton>
           )}
-        </div>
+        </Card>
       </div>
     );
   }
@@ -113,75 +105,69 @@ export const PublicTracker: React.FC<PublicTrackerProps> = ({ token, onBackToApp
   const latestPoint = tracking_points?.[tracking_points.length - 1];
 
   return (
-    <div className="min-h-screen bg-[#07070A] text-[#F4F1EC] p-4 sm:p-8 flex flex-col justify-between">
-      <div className="max-w-3xl mx-auto w-full space-y-5">
+    <div className="min-h-screen bg-[#FCF5E8] text-[#2A1B12] p-6 sm:p-12 flex flex-col justify-between select-none">
+      <div className="max-w-2xl mx-auto w-full space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#2A2E3A] pb-4">
+        <div className="flex items-center justify-between border-b border-[#EADFC9] pb-4">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#5EE6FF] animate-pulse" />
-              <span className="font-heading font-black text-sm uppercase tracking-widest text-[#5EE6FF]">
-                Live Worker Dispatch Telemetry
-              </span>
-            </div>
-            <h1 className="font-heading font-black text-2xl uppercase tracking-wider text-white mt-1">
-              Job {job.id.replace(/^job_/, '')} &bull; {getCategoryLabel(job.category)}
+            <span className="text-[12px] text-[#6B5B4E]">
+              Job {job.id.replace(/^job_/, '')}
+            </span>
+            <h1 className="text-h2">
+              {getCategoryLabel(job.category)}
             </h1>
           </div>
-          <Badge variant="verified" size="md">
-            Status: {job.status.toUpperCase()}
-          </Badge>
+          <span className="text-[14px] font-medium text-[#059669] capitalize">
+            {job.status}
+          </span>
         </div>
 
         {/* Live Trip Card */}
-        <HudPanel variant="default" className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-[#07070A] rounded-xl border border-[#2A2E3A]">
+        <Card className="space-y-4">
+          <div className="flex items-center justify-between">
             <div>
-              <span className="text-xs font-heading font-bold uppercase tracking-wider text-[#A7A29A]">Assigned Worker</span>
-              <p className="font-heading font-bold text-sm text-white uppercase">{job.worker_name || 'En Route Worker'}</p>
+              <span className="text-[12px] text-[#6B5B4E]">Worker</span>
+              <p className="font-heading font-bold text-[16px] text-[#2A1B12]">
+                {job.worker_name || 'Assigned Worker'}
+              </p>
             </div>
-            <div>
-              <span className="text-xs font-heading font-bold uppercase tracking-wider text-[#A7A29A]">Customer</span>
-              <p className="font-heading font-bold text-sm text-white">{job.customer_name || 'Verified Customer'}</p>
+            <div className="text-right">
+              <span className="text-[12px] text-[#6B5B4E]">Agreed Price</span>
+              <p className="font-heading font-bold text-[16px] text-[#2A1B12]">
+                ₹{job.agreed_price || job.offered_price}
+              </p>
             </div>
           </div>
 
           {/* Location Status */}
-          <div className="p-4 bg-[#151821] rounded-xl border border-[#2A2E3A] space-y-3 font-mono text-xs">
+          <div className="p-4 bg-[#FCF5E8] rounded-[16px] border border-[#EADFC9] space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[#FFB81C] font-bold uppercase flex items-center gap-1.5">
+              <span className="text-[14px] font-bold text-[#B5541E] flex items-center gap-1.5">
                 <Navigation className="w-4 h-4" />
-                Live GPS Coordinates
+                Live GPS
               </span>
-              <span className="text-xs text-[#A7A29A]">
+              <span className="text-[12px] text-[#6B5B4E]">
                 {latestPoint ? `Updated ${new Date(latestPoint.ts).toLocaleTimeString()}` : 'Fix pending...'}
               </span>
             </div>
 
-            {latestPoint ? (
-              <div className="grid grid-cols-2 gap-2 text-white">
-                <div>Latitude: <strong>{latestPoint.lat.toFixed(5)}</strong></div>
-                <div>Longitude: <strong>{latestPoint.lng.toFixed(5)}</strong></div>
+            {latestPoint && (
+              <div className="grid grid-cols-2 gap-2 text-[14px] text-[#2A1B12] pt-1">
                 <div>Speed: <strong>{Math.round(latestPoint.speed || 0)} km/h</strong></div>
                 <div>Accuracy: <strong>&plusmn;{Math.round(latestPoint.accuracy || 15)} m</strong></div>
-              </div>
-            ) : (
-              <div className="text-[#A7A29A] italic">
-                Awaiting GPS handshake from worker device...
               </div>
             )}
           </div>
 
-          <div className="p-3 bg-[#5EE6FF]/10 rounded-xl border border-[#5EE6FF]/30 text-xs text-[#5EE6FF] flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 shrink-0" />
-            <span>Privacy Guard: Coarse coordinates displayed before arrival. Raw GPS coordinates deleted upon job conclusion.</span>
+          <div className="text-[12px] text-[#6B5B4E] flex items-center gap-1.5 pt-1">
+            <ShieldCheck className="w-4 h-4 text-[#059669] shrink-0" />
+            <span>Raw GPS coordinates are permanently deleted upon job conclusion.</span>
           </div>
-        </HudPanel>
+        </Card>
       </div>
 
-      {/* Footer */}
-      <div className="max-w-3xl mx-auto w-full pt-6 text-center text-xs text-[#A7A29A] font-mono">
-        FairFix Bengaluru &bull; Read-Only Demo Tracking Link &bull; Expires on job completion
+      <div className="max-w-2xl mx-auto w-full pt-8 text-center text-[12px] text-[#6B5B4E]">
+        FairFix Bengaluru &bull; Read-Only Demo Tracking Link
       </div>
     </div>
   );

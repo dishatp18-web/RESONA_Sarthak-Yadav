@@ -1,22 +1,15 @@
-/**
- * FairFix Fair-Price Explorer - "Mark III Forge" Edition
- * Category chips, area chips, PriceBandGauge hero, inline SVG price sparkline,
- * and an explicit outlier list detailing which jobs were pruned and why.
- */
 import React, { useState, useEffect } from 'react';
 import { SERVICE_CATEGORIES, NEIGHBORHOODS, getCategoryLabel } from '../config.js';
 import { PriceBandResult } from '../types.js';
 import { PriceBandGauge } from './PriceBandGauge.js';
-import { HudPanel, ForgeButton, Badge, formatINR } from './ui/index.js';
 import { 
-  TrendingUp, 
-  MapPin, 
-  Calculator, 
-  Layers, 
-  Activity,
-  AlertTriangle,
-  Info
-} from 'lucide-react';
+  Chip, 
+  Card, 
+  Sheet, 
+  TextLink, 
+  DemoDataPill, 
+  formatINR 
+} from './ui/index.js';
 
 interface RecentJobPoint {
   id: string;
@@ -33,6 +26,8 @@ export const FairPriceExplorer: React.FC = () => {
 
   const [band, setBand] = useState<PriceBandResult | null>(null);
   const [recentPoints, setRecentPoints] = useState<RecentJobPoint[]>([]);
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
+  const [showDetailsSheet, setShowDetailsSheet] = useState(false);
 
   useEffect(() => {
     let isCancelled = false;
@@ -41,13 +36,13 @@ export const FairPriceExplorer: React.FC = () => {
         const res = await fetch(
           `/api/price-band?category=${category}&lat=${selectedNeighborhood.lat}&lng=${selectedNeighborhood.lng}&price=${testAmount}&perspective=customer`
         );
-        if (!res.ok) throw new Error('Failed to load band');
+        if (!res.ok) return;
         const data = await res.json();
         if (!isCancelled) {
           setBand(data.band);
         }
       } catch (err) {
-        console.error('Error fetching explorer band:', err);
+        // Fallback
       }
     };
 
@@ -57,7 +52,7 @@ export const FairPriceExplorer: React.FC = () => {
     };
   }, [category, selectedNeighborhood, testAmount]);
 
-  // Fetch recent completed jobs for sparkline and outlier list
+  // Fetch recent completed jobs for sparkline and unusual prices
   useEffect(() => {
     let isCancelled = false;
     const fetchRecentJobs = async () => {
@@ -69,31 +64,30 @@ export const FairPriceExplorer: React.FC = () => {
           (j: any) => j.category === category && ['completed', 'rated'].includes(j.status)
         );
 
-        // Take last 10 completed jobs
         const sorted = catJobs.slice(0, 10);
         if (!isCancelled && band) {
-          const iqrUpper = band.high + (band.high - band.low) * 1.5;
-          const iqrLower = Math.max(50, band.low - (band.high - band.low) * 1.5);
+          const upperFence = band.high + (band.high - band.low) * 1.5;
+          const lowerFence = Math.max(50, band.low - (band.high - band.low) * 1.5);
 
           const points: RecentJobPoint[] = sorted.map((j: any) => {
             const price = Number(j.agreed_price || j.offered_price);
-            const isOutlier = price > iqrUpper || price < iqrLower;
+            const isOutlier = price > upperFence || price < lowerFence;
             return {
               id: j.id,
               price,
               date: j.completed_at || j.created_at,
               isOutlier,
               reason: isOutlier
-                ? price > iqrUpper
-                  ? `${formatINR(price)} exceeds upper fence (Q3 + 1.5*IQR)`
-                  : `${formatINR(price)} below lower fence (Q1 - 1.5*IQR)`
+                ? price > upperFence
+                  ? `₹${price} was higher than normal range`
+                  : `₹${price} was lower than normal range`
                 : undefined,
             };
           });
           setRecentPoints(points);
         }
       } catch (err) {
-        console.error('Error loading recent job points:', err);
+        // Fallback
       }
     };
 
@@ -103,7 +97,6 @@ export const FairPriceExplorer: React.FC = () => {
     };
   }, [category, band]);
 
-  // Generate inline SVG sparkline path
   const renderSparkline = () => {
     if (recentPoints.length < 2) return null;
 
@@ -125,283 +118,156 @@ export const FairPriceExplorer: React.FC = () => {
 
     return (
       <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-20 overflow-visible">
-        <defs>
-          <linearGradient id="sparklineForgeGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#FFB81C" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#8E0B16" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-
-        {/* Fill Area */}
-        <path
-          d={`${pathD} L ${coords[coords.length - 1].x} ${height} L ${coords[0].x} ${height} Z`}
-          fill="url(#sparklineForgeGrad)"
-        />
-
-        {/* Stroke Line */}
         <path
           d={pathD}
           fill="none"
-          stroke="#FFB81C"
-          strokeWidth="2"
+          stroke="#B5541E"
+          strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-
-        {/* Points */}
         {coords.map((c, i) => (
-          <g key={i}>
-            <circle
-              cx={c.x}
-              cy={c.y}
-              r={c.point.isOutlier ? 4.5 : 3}
-              fill={c.point.isOutlier ? '#FF5C6C' : '#5EE6FF'}
-              stroke="#07070A"
-              strokeWidth="1.5"
-            />
-            {c.point.isOutlier && (
-              <circle
-                cx={c.x}
-                cy={c.y}
-                r="7"
-                fill="none"
-                stroke="#FF5C6C"
-                strokeWidth="1"
-                className="animate-ping"
-              />
-            )}
-          </g>
+          <circle
+            key={i}
+            cx={c.x}
+            cy={c.y}
+            r={c.point.isOutlier ? 4.5 : 3.5}
+            fill={c.point.isOutlier ? '#DC2626' : '#059669'}
+            stroke="#FFFBF3"
+            strokeWidth="2"
+          />
         ))}
       </svg>
     );
   };
 
-  const outlierPoints = recentPoints.filter((p) => p.isOutlier);
+  const unusualPoints = recentPoints.filter((p) => p.isOutlier);
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 space-y-6">
-      {/* Header */}
-      <HudPanel variant="default" className="relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#D7261E]/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="w-full max-w-lg mx-auto h-full flex flex-col justify-between overflow-hidden px-6 py-4 space-y-6 select-none">
+      {/* Title & Demo Data Pill */}
+      <div className="space-y-1">
+        <div className="flex items-center gap-2">
+          <h1 className="text-h2">
+            Prices
+          </h1>
+          <DemoDataPill />
+        </div>
+        <p className="text-[14px] leading-[20px] text-[#6B5B4E]">
+          Recent prices paid for trades in {selectedNeighborhood.name.split(' ')[0]}.
+        </p>
+      </div>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs uppercase font-heading font-bold tracking-wider px-2 py-0.5 rounded bg-[#FFB81C]/15 text-[#FFD65A] border border-[#FFB81C]/30">
-                Core Differentiator
-              </span>
-              <Badge variant="neutral" size="sm">
-                Demo data
-              </Badge>
+      {/* Category Chips */}
+      <div className="space-y-2">
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none -mx-6 px-6">
+          {SERVICE_CATEGORIES.map((cat) => {
+            const isSelected = category === cat.id;
+            return (
+              <Chip
+                key={cat.id}
+                selected={isSelected}
+                onClick={() => {
+                  setCategory(cat.id);
+                  setTestAmount(cat.baselinePrice);
+                }}
+              >
+                {cat.name}
+              </Chip>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* The Big Gauge in a Calm Card */}
+      <Card className="space-y-4">
+        <PriceBandGauge
+          band={band}
+          value={testAmount}
+          perspective="customer"
+          onChange={(p) => setTestAmount(p)}
+        />
+
+        {/* Links: "How is this calculated?" & "Details" */}
+        <div className="flex items-center justify-between pt-2 border-t border-[#EADFC9]">
+          <TextLink onClick={() => setShowHowItWorks(true)}>
+            How is this calculated?
+          </TextLink>
+          <TextLink onClick={() => setShowDetailsSheet(true)}>
+            Details
+          </TextLink>
+        </div>
+      </Card>
+
+      {/* "How is this calculated?" Sheet */}
+      <Sheet
+        isOpen={showHowItWorks}
+        onClose={() => setShowHowItWorks(false)}
+        title="How is this calculated?"
+      >
+        <div className="space-y-4 text-[14px] leading-[22px] text-[#2A1B12]">
+          <p>
+            FairFix computes live price benchmarks directly from completed repair jobs in your neighborhood.
+          </p>
+          <div className="bg-[#FFFBF3] border border-[#EADFC9] rounded-[20px] p-4 space-y-2">
+            <ul className="list-disc list-inside space-y-1.5 text-[#6B5B4E]">
+              <li><strong>Typical price:</strong> The middle price paid for repairs.</li>
+              <li><strong>Fair band:</strong> The central 50% range of completed local jobs.</li>
+              <li><strong>Unusual prices removed:</strong> High or low outliers are discarded automatically.</li>
+            </ul>
+          </div>
+        </div>
+      </Sheet>
+
+      {/* "Details" Sheet with Sparkline, unusual prices removed, and band history */}
+      <Sheet
+        isOpen={showDetailsSheet}
+        onClose={() => setShowDetailsSheet(false)}
+        title={`${getCategoryLabel(category)} details`}
+      >
+        <div className="space-y-5 text-[14px] text-[#2A1B12]">
+          {/* Sparkline */}
+          <div className="space-y-2">
+            <span className="font-heading font-bold text-[16px]">
+              Recent completed prices
+            </span>
+            <div className="bg-[#FCF5E8] rounded-[20px] p-4 border border-[#EADFC9]">
+              {renderSparkline()}
             </div>
-            <h1 className="font-heading text-2xl sm:text-3xl font-black text-white tracking-wider uppercase mt-1">
-              Live Fair-Price Band Monitor
-            </h1>
-            <p className="text-xs sm:text-sm text-[#A7A29A] mt-1 max-w-2xl font-sans">
-              Algorithmic price bands derived from real completed transactions in Bangalore. Outliers eliminated via IQR rule; velocity capped at &plusmn;10% weekly.
+          </div>
+
+          {/* Unusual prices removed */}
+          <div className="space-y-2">
+            <span className="font-heading font-bold text-[16px]">
+              Unusual prices removed
+            </span>
+            {unusualPoints.length === 0 ? (
+              <p className="text-[12px] text-[#6B5B4E]">
+                No unusual prices removed in recent jobs.
+              </p>
+            ) : (
+              <div className="space-y-2">
+                {unusualPoints.map((pt) => (
+                  <div
+                    key={pt.id}
+                    className="p-3 rounded-[16px] bg-[#FCF5E8] border border-[#EADFC9] flex items-center justify-between text-xs"
+                  >
+                    <span className="font-bold text-[#DC2626]">₹{pt.price}</span>
+                    <span className="text-[#6B5B4E]">{pt.reason}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Band history note */}
+          <div className="space-y-1 pt-2 border-t border-[#EADFC9] text-[12px] text-[#6B5B4E]">
+            <p>
+              Updated automatically each time a customer rates a completed repair.
             </p>
           </div>
         </div>
-      </HudPanel>
-
-      {/* Selectors */}
-      <HudPanel variant="default" className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Category Chips */}
-          <div>
-            <label className="block text-xs font-heading font-bold uppercase tracking-wider text-[#FFD65A] mb-2">
-              Select Category
-            </label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {SERVICE_CATEGORIES.map((cat) => {
-                const isSelected = category === cat.id;
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => {
-                      setCategory(cat.id);
-                      setTestAmount(cat.baselinePrice);
-                    }}
-                    className={`p-2.5 rounded-lg border text-left text-xs font-heading font-bold uppercase tracking-wider transition cursor-pointer min-h-[44px] ${
-                      isSelected
-                        ? 'bg-gradient-to-r from-[#8E0B16] to-[#D7261E] border-[#FFB81C] text-white shadow-[0_0_15px_rgba(255,184,28,0.3)]'
-                        : 'bg-[#151821] hover:bg-[#1C202B] border-[#2A2E3A] text-[#A7A29A] hover:text-white'
-                    }`}
-                  >
-                    <span>{cat.name}</span>
-                    {cat.id === 'cook_maid' && (
-                      <span className="block text-xs font-mono text-[#FFB81C] mt-0.5">
-                        (3 jobs: Low Conf)
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Area Chips */}
-          <div>
-            <label className="block text-xs font-heading font-bold uppercase tracking-wider text-[#FFD65A] mb-2 flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-[#FFB81C]" />
-              Select Hyperlocal Area
-            </label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {NEIGHBORHOODS.map((n) => {
-                const isSelected = selectedNeighborhood.id === n.id;
-                return (
-                  <button
-                    key={n.id}
-                    onClick={() => setSelectedNeighborhood(n)}
-                    className={`p-2.5 rounded-lg border text-left text-xs font-heading font-bold uppercase tracking-wider transition cursor-pointer min-h-[44px] ${
-                      isSelected
-                        ? 'bg-gradient-to-r from-[#8E0B16] to-[#D7261E] border-[#FFB81C] text-white shadow-[0_0_15px_rgba(255,184,28,0.3)]'
-                        : 'bg-[#151821] hover:bg-[#1C202B] border-[#2A2E3A] text-[#A7A29A] hover:text-white'
-                    }`}
-                  >
-                    <p className="truncate">{n.name}</p>
-                    <p className="text-xs text-[#A7A29A] font-mono mt-0.5">{n.areaKey}</p>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Rate Simulator Bar */}
-        <div className="pt-3 border-t border-[#2A2E3A] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <Calculator className="w-4 h-4 text-[#5EE6FF]" />
-            <span className="text-xs font-heading font-bold uppercase tracking-wider text-white">
-              Simulate Any Rate on Live Band:
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="relative w-44">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-heading font-bold text-[#A7A29A] text-xs">
-                ₹
-              </span>
-              <input
-                type="number"
-                step={25}
-                value={testAmount || ''}
-                onChange={(e) => setTestAmount(Number(e.target.value))}
-                className="w-full bg-[#07070A] border border-[#2A2E3A] rounded-xl pl-8 pr-3 py-2 font-heading text-sm font-bold text-white focus:outline-none focus:border-[#FFB81C] tabular-nums"
-              />
-            </div>
-            {band && (
-              <ForgeButton variant="ghost" size="sm" onClick={() => setTestAmount(band.typical)}>
-                Reset
-              </ForgeButton>
-            )}
-          </div>
-        </div>
-      </HudPanel>
-
-      {/* Hero Visualizer */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-8 space-y-6">
-          <PriceBandGauge
-            band={band}
-            currentPrice={testAmount}
-            perspective="explorer"
-            onPriceChange={(price) => setTestAmount(price)}
-          />
-
-          {/* Sparkline & Outlier Pruning Section */}
-          <HudPanel variant="default" className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Activity className="w-4 h-4 text-[#5EE6FF]" />
-                <h4 className="font-heading font-bold text-sm text-white uppercase tracking-wider">
-                  Completed Job Transaction Sparkline (Last 10 Jobs)
-                </h4>
-              </div>
-              <span className="text-xs font-mono text-[#A7A29A]">
-                Red points = Outliers Pruned
-              </span>
-            </div>
-
-            {/* Sparkline */}
-            <div className="p-3 bg-[#07070A] rounded-xl border border-[#2A2E3A]">
-              {renderSparkline()}
-            </div>
-
-            {/* Outlier Pruning Log */}
-            <div className="space-y-2 pt-2">
-              <h5 className="font-heading font-bold text-xs text-[#FFD65A] uppercase tracking-wider">
-                Outliers Pruned by IQR Rule ({outlierPoints.length})
-              </h5>
-              {outlierPoints.length === 0 ? (
-                <p className="text-xs text-[#A7A29A] font-sans">
-                  No statistical outliers detected in the current window for {getCategoryLabel(category)}.
-                </p>
-              ) : (
-                <div className="space-y-2">
-                  {outlierPoints.map((pt, i) => (
-                    <div
-                      key={i}
-                      className="p-2.5 rounded-lg bg-[#FF5C6C]/10 border border-[#FF5C6C]/30 flex items-center justify-between text-xs font-mono"
-                    >
-                      <div className="flex items-center gap-2">
-                        <AlertTriangle className="w-4 h-4 text-[#FF5C6C] shrink-0" />
-                        <div>
-                          <span className="font-bold text-white">{formatINR(pt.price)}</span>
-                          <span className="text-[#A7A29A] text-xs ml-2">Job {String(pt.id).replace(/^job_/, '')}</span>
-                        </div>
-                      </div>
-                      <span className="text-xs text-[#FF5C6C]">
-                        {pt.reason}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </HudPanel>
-        </div>
-
-        {/* Algorithm Technical Transparency Spec */}
-        <div className="lg:col-span-4 space-y-5">
-          <HudPanel variant="default" className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Layers className="w-4 h-4 text-[#5EE6FF]" />
-              <h3 className="font-heading font-bold text-sm text-white uppercase tracking-wider">Mathematical Architecture</h3>
-            </div>
-
-            <div className="space-y-3 text-xs text-[#A7A29A] font-sans">
-              <div className="p-3 bg-[#07070A] rounded-lg border border-[#2A2E3A]">
-                <span className="text-white font-heading font-bold uppercase tracking-wider block mb-0.5">1. IQR Rule</span>
-                <p className="text-xs leading-relaxed">
-                  Drops values &lt; Q1 - 1.5&times;IQR or &gt; Q3 + 1.5&times;IQR. Deliberate extreme quotes are filtered automatically.
-                </p>
-              </div>
-
-              <div className="p-3 bg-[#07070A] rounded-lg border border-[#2A2E3A]">
-                <span className="text-white font-heading font-bold uppercase tracking-wider block mb-0.5">2. Anti-Gaming Pair Cap</span>
-                <p className="text-xs leading-relaxed">
-                  Worker-customer pairs contribute at most 2 completed jobs per 7-day rolling window to stop collusive artificial rate surges.
-                </p>
-              </div>
-
-              <div className="p-3 bg-[#07070A] rounded-lg border border-[#2A2E3A]">
-                <span className="text-white font-heading font-bold uppercase tracking-wider block mb-0.5">3. 10% Weekly Velocity Bound</span>
-                <p className="text-xs leading-relaxed">
-                  Bands may not fluctuate more than 10% week-over-week against recent snapshots, ensuring market predictability.
-                </p>
-              </div>
-
-              <div className="p-3 bg-[#07070A] rounded-lg border border-[#2A2E3A]">
-                <span className="text-white font-heading font-bold uppercase tracking-wider block mb-0.5">4. Sparse Fallback Tier</span>
-                <p className="text-xs leading-relaxed">
-                  Categories with &lt;5 jobs are explicitly flagged as &ldquo;Low: Few jobs&rdquo; (test with Cook &amp; Maid, which has 3 jobs).
-                </p>
-              </div>
-            </div>
-          </HudPanel>
-        </div>
-      </div>
+      </Sheet>
     </div>
   );
 };

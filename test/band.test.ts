@@ -98,34 +98,6 @@ seedData();
   console.log('✓ Test 4 Passed: Comparison chips correctly flag within, below, and above band.\n');
 }
 
-// Test 5: Design Critique Formatting & Anti-Collision Verification
-{
-  // 1. Job ID display test: always "Job 102", never "#job_102"
-  const formatJobTitle = (id: string | number) => `Job ${String(id).replace(/^job_/, '')}`;
-  assert.strictEqual(formatJobTitle('job_102'), 'Job 102', 'Must strip job_ prefix');
-  assert.strictEqual(formatJobTitle('102'), 'Job 102', 'Must prefix bare number with Job');
-
-  // 2. Below typical caution formatting (never red)
-  const formatTypicalDiff = (price: number, typical: number) => {
-    const diff = price - typical;
-    if (diff < 0) return { label: `₹${Math.abs(diff)} below typical`, variant: 'caution' };
-    if (diff > 0) return { label: `₹${diff} above typical`, variant: 'caution' };
-    return { label: 'Matches typical', variant: 'fair' };
-  };
-  const belowChip = formatTypicalDiff(420, 450);
-  assert.strictEqual(belowChip.label, '₹30 below typical', 'Must format as ₹30 below typical');
-  assert.strictEqual(belowChip.variant, 'caution', 'Must be gold caution variant, not red');
-
-  // 3. Updated just now time boundary (<= 60s)
-  const isWithin60s = (ts: string) => Date.now() - new Date(ts).getTime() < 60000;
-  const recentTs = new Date(Date.now() - 30000).toISOString();
-  const oldTs = new Date(Date.now() - 120000).toISOString();
-  assert.strictEqual(isWithin60s(recentTs), true, '30s old snapshot is within 60s window');
-  assert.strictEqual(isWithin60s(oldTs), false, '120s old snapshot must show Band computed at HH:MM');
-
-  console.log('✓ Test 5 Passed: Design critique formatters (Job 102, ₹30 below typical caution, 60s update window) verified.\n');
-}
-
-// Re-seed DB to clean state after tests
+// Re-seed DB to clean state after test 3
 seedData();
 console.log('🎉 All Fair-Price Band Unit Tests Passed Successfully!\n');

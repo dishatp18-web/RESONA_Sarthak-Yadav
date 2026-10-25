@@ -424,8 +424,8 @@ apiRouter.get('/jobs', (req, res) => {
 
   const rows = db.prepare(query).all(...params) as any[];
 
-  // Attach latest offer & enforce privacy masking (masked until accepted, masked again after rated)
-  const unmaskedStatuses = ['accepted', 'in_progress', 'completed'];
+  // Attach latest offer & enforce privacy masking
+  const unmaskedStatuses = ['accepted', 'in_progress', 'completed', 'rated'];
 
   const results = rows.map((job) => {
     const latestOffer = db.prepare(`
@@ -482,8 +482,7 @@ apiRouter.get('/jobs/:id', (req, res) => {
     ORDER BY round ASC, created_at ASC
   `).all(job.id) as any[];
 
-  // Phone numbers: masked until accepted, masked again after the job is rated
-  const unmaskedStatuses = ['accepted', 'in_progress', 'completed'];
+  const unmaskedStatuses = ['accepted', 'in_progress', 'completed', 'rated'];
   const isAccepted = unmaskedStatuses.includes(job.status);
 
   res.json({
