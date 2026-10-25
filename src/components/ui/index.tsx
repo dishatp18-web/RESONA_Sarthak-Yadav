@@ -1,10 +1,13 @@
 /**
- * FairFix "Mark III Forge" Component Suite
- * Dark metallic cockpit styling, red & gold armor, and cyan live status accents.
+ * FairFix Calm Component Suite
+ * Strictly adheres to Calm design tokens:
+ * --bg #FCF5E8, --surface #FFFBF3, --line #EADFC9, --chip #F4EBDA,
+ * --ink #2A1B12, --muted #6B5B4E, --accent #B5541E, --on-accent #FFFFFF.
+ * 52px pill primary button, 36px chip, 20px radius cards, bottom sheets, stat rows.
  */
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LucideIcon, CheckCircle2, AlertTriangle, AlertOctagon, Info, ShieldCheck, X } from 'lucide-react';
+import { LucideIcon, CheckCircle2, AlertTriangle, AlertOctagon, Info, X } from 'lucide-react';
 
 /**
  * Format numbers using standard Indian currency grouping (e.g. ₹1,25,000)
@@ -17,7 +20,7 @@ export function formatINR(amount: number): string {
   }).format(amount);
 }
 
-/* 1. ArcLoader: Concentric rotating rings in cyan */
+/* 1. ArcLoader: Smooth modern spinner */
 export const ArcLoader: React.FC<{ size?: 'sm' | 'md' | 'lg'; className?: string }> = ({
   size = 'md',
   className = '',
@@ -26,62 +29,42 @@ export const ArcLoader: React.FC<{ size?: 'sm' | 'md' | 'lg'; className?: string
 
   return (
     <div className={`relative inline-flex items-center justify-center ${dims} ${className}`}>
-      <div className="absolute inset-0 rounded-full border-2 border-[#5EE6FF]/20" />
-      <div className="absolute inset-0 rounded-full border-2 border-t-[#5EE6FF] border-r-[#5EE6FF] border-b-transparent border-l-transparent animate-spin" />
-      <div className="w-1.5 h-1.5 rounded-full bg-[#5EE6FF] shadow-[0_0_6px_#5EE6FF]" />
+      <div className="absolute inset-0 rounded-full border-2 border-[#EADFC9]" />
+      <div className="absolute inset-0 rounded-full border-2 border-t-[#B5541E] border-r-[#B5541E] border-b-transparent border-l-transparent animate-spin" />
     </div>
   );
 };
 
-/* 2. ForgeButton */
-export interface ForgeButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+/* 2. PrimaryButton: 52px high pill, accent fill, white 16/600 text; press scale 0.98; loading ring; disabled 40% */
+export interface PrimaryButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  variant?: 'primary' | 'ghost' | 'danger';
   icon?: LucideIcon;
-  size?: 'sm' | 'md' | 'lg';
-  fullWidth?: boolean;
   loading?: boolean;
+  fullWidth?: boolean;
 }
 
-export const ForgeButton: React.FC<ForgeButtonProps> = ({
+export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   children,
-  variant = 'primary',
   icon: Icon,
-  size = 'md',
-  fullWidth = false,
   loading = false,
+  fullWidth = false,
   disabled,
   className = '',
   ...props
 }) => {
-  const sizeClasses = {
-    sm: 'py-2 px-3.5 text-xs rounded-lg gap-1.5 min-h-[44px]',
-    md: 'py-2.5 px-5 text-sm rounded-xl gap-2 min-h-[44px]',
-    lg: 'py-3.5 px-7 text-base rounded-xl gap-2.5 min-h-[48px]',
-  }[size];
-
-  const variantStyles = {
-    primary:
-      'bg-gradient-to-r from-[#8E0B16] via-[#D7261E] to-[#8E0B16] text-white border-t border-[rgba(255,184,28,0.6)] border-b border-black shadow-[0_4px_16px_rgba(215,38,30,0.35)] hover:shadow-[0_6px_22px_rgba(255,184,28,0.4)] hover:brightness-110 active:scale-[0.98]',
-    ghost:
-      'bg-[#151821] text-[#F4F1EC] border border-[#2A2E3A] hover:border-[rgba(255,184,28,0.4)] hover:bg-[#1C202B] active:scale-[0.98]',
-    danger:
-      'bg-[rgba(255,92,108,0.15)] text-[#FF5C6C] border border-[rgba(255,92,108,0.4)] hover:bg-[rgba(255,92,108,0.25)] hover:shadow-[0_0_16px_rgba(255,92,108,0.3)] active:scale-[0.98]',
-  }[variant];
-
   return (
     <button
       disabled={disabled || loading}
-      className={`relative inline-flex items-center justify-center font-heading uppercase tracking-wider font-bold transition-all duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none ${
+      className={`h-[52px] min-h-[52px] px-6 rounded-full bg-[#B5541E] hover:bg-[#9E4717] active:scale-[0.98] text-white font-heading font-semibold text-[16px] leading-[24px] inline-flex items-center justify-center gap-2 transition-all duration-180 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-[#2A1B12] focus:ring-offset-2 ${
         fullWidth ? 'w-full' : ''
-      } ${sizeClasses} ${variantStyles} ${className}`}
+      } ${className}`}
       {...props}
     >
       {loading ? (
-        <ArcLoader size="sm" />
+        <div className="w-5 h-5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
       ) : (
         <>
-          {Icon && <Icon className={size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4'} />}
+          {Icon && <Icon className="w-5 h-5 shrink-0" />}
           <span>{children}</span>
         </>
       )}
@@ -89,150 +72,388 @@ export const ForgeButton: React.FC<ForgeButtonProps> = ({
   );
 };
 
-/* 3. HudPanel (Metallic Cockpit with Gold Corner Brackets) */
-export interface HudPanelProps extends React.HTMLAttributes<HTMLDivElement> {
+/* 3. SecondaryButton: 52px high, 1px accent outline pill */
+export interface SecondaryButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  variant?: 'default' | 'highlight' | 'flat';
-  selected?: boolean;
-  className?: string;
+  icon?: LucideIcon;
+  loading?: boolean;
+  fullWidth?: boolean;
 }
 
-export const HudPanel: React.FC<HudPanelProps> = ({
+export const SecondaryButton: React.FC<SecondaryButtonProps> = ({
   children,
-  variant = 'default',
-  selected = false,
+  icon: Icon,
+  loading = false,
+  fullWidth = false,
+  disabled,
   className = '',
   ...props
 }) => {
-  const hasBrackets = variant !== 'flat';
-  const highlightBorder = variant === 'highlight' ? 'border-[rgba(255,184,28,0.45)]' : 'border-[rgba(255,184,28,0.18)]';
-  const selectedRing = selected ? 'ring-2 ring-[#FFB81C] shadow-[0_0_24px_rgba(255,184,28,0.35)]' : '';
-
   return (
-    <div
-      className={`hud-panel ${hasBrackets ? 'hud-panel-brackets' : ''} ${highlightBorder} ${selectedRing} p-4 sm:p-5 ${className}`}
+    <button
+      disabled={disabled || loading}
+      className={`h-[52px] min-h-[52px] px-6 rounded-full border border-[#B5541E] text-[#B5541E] bg-transparent hover:bg-[#B5541E]/5 active:scale-[0.98] font-heading font-semibold text-[16px] leading-[24px] inline-flex items-center justify-center gap-2 transition-all duration-180 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-[#2A1B12] focus:ring-offset-2 ${
+        fullWidth ? 'w-full' : ''
+      } ${className}`}
       {...props}
     >
+      {loading ? (
+        <div className="w-5 h-5 rounded-full border-2 border-[#B5541E]/30 border-t-[#B5541E] animate-spin" />
+      ) : (
+        <>
+          {Icon && <Icon className="w-5 h-5 shrink-0" />}
+          <span>{children}</span>
+        </>
+      )}
+    </button>
+  );
+};
+
+/* 4. TextLink: accent, underlined on focus */
+export interface TextLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+  children: React.ReactNode;
+  onClick?: (e: React.MouseEvent) => void;
+}
+
+export const TextLink: React.FC<TextLinkProps> = ({
+  children,
+  className = '',
+  ...props
+}) => {
+  return (
+    <a
+      className={`text-[#B5541E] hover:underline focus:underline cursor-pointer font-medium text-[14px] leading-[20px] transition-colors focus:outline-none ${className}`}
+      {...props}
+    >
+      {children}
+    </a>
+  );
+};
+
+/* 5. Chip: 36px, pill, --chip fill, ink text; selected = accent fill with white text */
+export interface ChipProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode;
+  selected?: boolean;
+  icon?: LucideIcon;
+}
+
+export const Chip: React.FC<ChipProps> = ({
+  children,
+  selected = false,
+  icon: Icon,
+  className = '',
+  ...props
+}) => {
+  return (
+    <button
+      type="button"
+      className={`h-[36px] min-h-[36px] px-4 rounded-full text-[14px] font-medium inline-flex items-center gap-2 transition-colors duration-180 cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#2A1B12] focus:ring-offset-2 select-none ${
+        selected
+          ? 'bg-[#B5541E] text-white'
+          : 'bg-[#F4EBDA] text-[#2A1B12] hover:bg-[#EADFC9]'
+      } ${className}`}
+      {...props}
+    >
+      {Icon && <Icon className="w-4 h-4 shrink-0" />}
+      <span>{children}</span>
+    </button>
+  );
+};
+
+/* 6. Card: radius 20, 16px inside, 1px border OR shadow, never both */
+export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+  variant?: 'border' | 'shadow';
+  className?: string;
+}
+
+export const Card: React.FC<CardProps> = ({
+  children,
+  variant = 'border',
+  className = '',
+  ...props
+}) => {
+  const cardStyle =
+    variant === 'shadow'
+      ? 'bg-[#FFFBF3] rounded-[20px] p-4 shadow-[0_8px_24px_rgba(42,27,18,0.06)] text-[#2A1B12]'
+      : 'bg-[#FFFBF3] rounded-[20px] p-4 border border-[#EADFC9] text-[#2A1B12]';
+
+  return (
+    <div className={`${cardStyle} ${className}`} {...props}>
       {children}
     </div>
   );
 };
 
-/* 4. Badge / Chip (The ONLY status colors: fair #5EE6FF, caution #FFB81C, danger #FF5C6C) */
-export interface BadgeProps {
+/* 7. SectionTitle: H2 24/30 Plus Jakarta Sans */
+export const SectionTitle: React.FC<{ children: React.ReactNode; className?: string }> = ({
+  children,
+  className = '',
+}) => {
+  return (
+    <h2 className={`font-heading font-bold text-[24px] leading-[30px] text-[#2A1B12] tracking-[-0.02em] ${className}`}>
+      {children}
+    </h2>
+  );
+};
+
+/* 8. StatRow: three numbers (value in Display-small 28 accent, caption below) */
+export interface StatItem {
+  value: string | number;
+  label: string;
+  onClick?: () => void;
+}
+
+export const StatRow: React.FC<{ stats: StatItem[]; className?: string }> = ({
+  stats,
+  className = '',
+}) => {
+  return (
+    <div className={`grid grid-cols-3 gap-3 py-2 ${className}`}>
+      {stats.map((s, idx) => (
+        <div
+          key={idx}
+          onClick={s.onClick}
+          className={`flex flex-col text-left ${s.onClick ? 'cursor-pointer hover:opacity-85' : ''}`}
+        >
+          <div className="font-heading font-extrabold text-[28px] leading-[32px] text-[#B5541E] tracking-tight">
+            {s.value}
+          </div>
+          <div className="text-[12px] leading-[16px] text-[#6B5B4E] mt-1 line-clamp-2">
+            {s.label}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+/* 9. Sheet: bottom sheet with drag handle and Esc, 180ms fade / 240ms slide */
+export interface SheetProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
   children: React.ReactNode;
-  variant?: 'fair' | 'caution' | 'danger' | 'info' | 'neutral' | 'verified';
+}
+
+export const Sheet: React.FC<SheetProps> = ({ isOpen, onClose, title, children }) => {
+  const sheetRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center">
+          {/* Backdrop with 180ms fade */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-[#2A1B12]/40 backdrop-blur-xs"
+          />
+
+          {/* Sheet panel with 240ms slide */}
+          <motion.div
+            ref={sheetRef}
+            initial={{ y: '100%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '100%' }}
+            transition={{ duration: 0.24, ease: [0.32, 0.72, 0, 1] }}
+            className="relative w-full max-w-lg bg-[#FFFBF3] border-t border-[#EADFC9] rounded-t-[24px] p-6 shadow-2xl z-10 max-h-[85vh] overflow-y-auto text-[#2A1B12]"
+          >
+            {/* Drag Handle */}
+            <div className="w-12 h-1.5 rounded-full bg-[#EADFC9] mx-auto mb-4" />
+
+            {title && (
+              <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#EADFC9]">
+                <h3 className="font-heading font-bold text-[20px] leading-[26px] text-[#2A1B12]">
+                  {title}
+                </h3>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-[#6B5B4E] hover:text-[#2A1B12] hover:bg-[#F4EBDA] cursor-pointer"
+                  aria-label="Close"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            )}
+
+            {children}
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+/* 10. ProgressBar: 4 thin segments, no labels */
+export const ProgressBar: React.FC<{ step: number; total?: number; className?: string }> = ({
+  step,
+  total = 4,
+  className = '',
+}) => {
+  return (
+    <div className={`flex items-center gap-1.5 w-full ${className}`}>
+      {Array.from({ length: total }).map((_, idx) => {
+        const isCompletedOrActive = idx < step;
+        return (
+          <div
+            key={idx}
+            className={`h-1 flex-1 rounded-full transition-colors duration-180 ${
+              isCompletedOrActive ? 'bg-[#B5541E]' : 'bg-[#EADFC9]'
+            }`}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
+/* 11. DemoDataPill: honest unobtrusive demo data indicator */
+export const DemoDataPill: React.FC<{ className?: string }> = ({ className = '' }) => {
+  return (
+    <span
+      className={`inline-flex items-center px-2 py-0.5 rounded-full bg-[#F4EBDA] text-[#6B5B4E] text-[12px] leading-[16px] font-medium ${className}`}
+    >
+      Demo data
+    </span>
+  );
+};
+
+/* 12. StatusChip: only for actual status (fair, caution, danger) */
+export interface StatusChipProps {
+  status: 'fair' | 'caution' | 'danger';
+  label: string;
   icon?: LucideIcon;
-  size?: 'sm' | 'md';
   className?: string;
 }
 
-export const Badge: React.FC<BadgeProps> = ({
-  children,
-  variant = 'neutral',
+export const StatusChip: React.FC<StatusChipProps> = ({
+  status,
+  label,
   icon: Icon,
-  size = 'sm',
   className = '',
 }) => {
-  // Always 12% tinted fill, 1px matching border, plus icon & text. Never color alone!
   const styles = {
-    fair: 'bg-[#5EE6FF]/12 text-[#5EE6FF] border-[#5EE6FF]/30',
-    caution: 'bg-[#FFB81C]/12 text-[#FFB81C] border-[#FFB81C]/30',
-    danger: 'bg-[#FF5C6C]/12 text-[#FF5C6C] border-[#FF5C6C]/30',
-    info: 'bg-[#5EE6FF]/12 text-[#5EE6FF] border-[#5EE6FF]/30',
-    neutral: 'bg-white/5 text-[#A7A29A] border-white/10',
-    verified: 'bg-[#5EE6FF]/15 text-[#5EE6FF] border-[#5EE6FF]/40 shadow-[0_0_10px_rgba(94,230,255,0.25)]',
-  }[variant];
+    fair: 'bg-[rgba(5,150,105,0.1)] text-[#059669]',
+    caution: 'bg-[rgba(180,83,9,0.1)] text-[#B45309]',
+    danger: 'bg-[rgba(220,38,38,0.1)] text-[#DC2626]',
+  }[status];
 
   const defaultIcons = {
     fair: CheckCircle2,
     caution: AlertTriangle,
     danger: AlertOctagon,
-    info: Info,
-    neutral: undefined,
-    verified: ShieldCheck,
   };
 
-  const DisplayIcon = Icon || defaultIcons[variant];
-  const sizeStyles = size === 'sm' ? 'text-xs px-2 py-0.5' : 'text-xs px-2.5 py-1';
+  const DisplayIcon = Icon || defaultIcons[status];
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 font-heading font-bold uppercase tracking-wider rounded-md border ${styles} ${sizeStyles} ${className}`}
+      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[12px] leading-[16px] font-medium ${styles} ${className}`}
     >
-      {DisplayIcon && <DisplayIcon className={size === 'sm' ? 'w-3 h-3 shrink-0' : 'w-3.5 h-3.5 shrink-0'} />}
-      <span>{children}</span>
+      {DisplayIcon && <DisplayIcon className="w-3.5 h-3.5 shrink-0" />}
+      <span>{label}</span>
     </span>
   );
 };
 
-/* 5. Tabs / SegmentedControl with Sliding Pill & Arrow Keys */
-export interface TabOption {
-  id: string;
-  label: string;
-  icon?: LucideIcon;
-  badge?: string | number;
-}
+/* Compatibility wrappers for legacy usages */
+export const ForgeButton: React.FC<any> = ({
+  children,
+  variant = 'primary',
+  icon,
+  loading = false,
+  fullWidth = false,
+  className = '',
+  ...props
+}) => {
+  if (variant === 'ghost' || variant === 'dark') {
+    return (
+      <SecondaryButton
+        icon={icon}
+        loading={loading}
+        fullWidth={fullWidth}
+        className={className}
+        {...props}
+      >
+        {children}
+      </SecondaryButton>
+    );
+  }
+  return (
+    <PrimaryButton
+      icon={icon}
+      loading={loading}
+      fullWidth={fullWidth}
+      className={className}
+      {...props}
+    >
+      {children}
+    </PrimaryButton>
+  );
+};
 
-export interface TabsProps {
-  options: TabOption[];
-  activeId: string;
-  onChange: (id: string) => void;
-  className?: string;
-}
+export const HudPanel: React.FC<any> = ({ children, className = '', ...props }) => {
+  return (
+    <Card className={className} {...props}>
+      {children}
+    </Card>
+  );
+};
 
-export const Tabs: React.FC<TabsProps> = ({
-  options,
-  activeId,
-  onChange,
+export const Badge: React.FC<any> = ({
+  children,
+  variant = 'neutral',
+  icon,
   className = '',
 }) => {
-  const handleKeyDown = (e: React.KeyboardEvent, currentIndex: number) => {
-    if (e.key === 'ArrowRight') {
-      const nextIndex = (currentIndex + 1) % options.length;
-      onChange(options[nextIndex].id);
-    } else if (e.key === 'ArrowLeft') {
-      const prevIndex = (currentIndex - 1 + options.length) % options.length;
-      onChange(options[prevIndex].id);
-    }
-  };
-
+  if (variant === 'fair' || variant === 'verified') {
+    return <StatusChip status="fair" label={children} icon={icon} className={className} />;
+  }
+  if (variant === 'caution') {
+    return <StatusChip status="caution" label={children} icon={icon} className={className} />;
+  }
+  if (variant === 'danger') {
+    return <StatusChip status="danger" label={children} icon={icon} className={className} />;
+  }
   return (
-    <div
-      role="tablist"
-      className={`inline-flex p-1 bg-[#0E1016] border border-[#2A2E3A] rounded-xl relative ${className}`}
-    >
-      {options.map((opt, idx) => {
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#F4EBDA] text-[#6B5B4E] text-[12px] font-medium ${className}`}>
+      {children}
+    </span>
+  );
+};
+
+export const Tabs: React.FC<any> = ({ options, activeId, onChange, className = '' }) => {
+  return (
+    <div className={`inline-flex p-1 bg-[#F4EBDA] rounded-full gap-1 ${className}`}>
+      {options.map((opt: any) => {
         const isActive = activeId === opt.id;
-        const Icon = opt.icon;
         return (
           <button
             key={opt.id}
-            role="tab"
-            aria-selected={isActive}
-            tabIndex={isActive ? 0 : -1}
+            type="button"
             onClick={() => onChange(opt.id)}
-            onKeyDown={(e) => handleKeyDown(e, idx)}
-            className={`relative px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-heading uppercase tracking-wider font-bold transition-colors duration-200 flex items-center gap-1.5 cursor-pointer z-10 ${
-              isActive ? 'text-white' : 'text-[#A7A29A] hover:text-[#F4F1EC]'
+            className={`px-4 py-1.5 rounded-full text-[14px] font-medium transition-colors cursor-pointer ${
+              isActive
+                ? 'bg-[#B5541E] text-white'
+                : 'text-[#6B5B4E] hover:text-[#2A1B12]'
             }`}
           >
-            {isActive && (
-              <motion.div
-                layoutId="activeTabPillForge"
-                className="absolute inset-0 rounded-lg bg-gradient-to-r from-[#8E0B16] via-[#D7261E] to-[#FFB81C] shadow-[0_0_14px_rgba(215,38,30,0.5)] border-t border-[rgba(255,184,28,0.7)] -z-10"
-                transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-              />
-            )}
-            {Icon && <Icon className="w-3.5 h-3.5 shrink-0" />}
-            <span>{opt.label}</span>
-            {opt.badge !== undefined && (
-              <span className={`text-xs px-1.5 py-0.2 rounded font-mono font-bold ml-1 ${
-                isActive ? 'bg-black/40 text-[#FFD65A]' : 'bg-white/10 text-slate-300'
-              }`}>
-                {opt.badge}
-              </span>
-            )}
+            {opt.label}
           </button>
         );
       })}
@@ -240,14 +461,19 @@ export const Tabs: React.FC<TabsProps> = ({
   );
 };
 
-/* 6. Skeleton Loader in Steel Tones */
-export const Skeleton: React.FC<{ className?: string }> = ({ className = 'h-4 w-full' }) => {
+export const Drawer: React.FC<any> = ({ isOpen, onClose, title, children }) => {
   return (
-    <div className={`animate-pulse bg-[#151821] border border-[#2A2E3A] rounded-lg ${className}`} />
+    <Sheet isOpen={isOpen} onClose={onClose} title={title}>
+      {children}
+    </Sheet>
   );
 };
 
-/* 7. Toast System with aria-live="polite" */
+export const Skeleton: React.FC<{ className?: string }> = ({ className = 'h-4 w-full' }) => {
+  return <div className={`animate-pulse bg-[#EADFC9]/60 rounded-xl ${className}`} />;
+};
+
+/* Toast System */
 export interface ToastMessage {
   id: string;
   title: string;
@@ -271,7 +497,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     setTimeout(() => {
       setToasts((prev) => prev.filter((item) => item.id !== id));
-    }, 4500);
+    }, 4000);
   };
 
   return (
@@ -279,35 +505,24 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       {children}
       <div
         aria-live="polite"
-        className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-3"
+        className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4"
       >
         <AnimatePresence>
-          {toasts.map((toast) => {
-            const borderColors = {
-              fair: 'border-[#5EE6FF]/50 bg-[#0E1016]/95 text-[#5EE6FF]',
-              caution: 'border-[#FFB81C]/50 bg-[#0E1016]/95 text-[#FFB81C]',
-              danger: 'border-[#FF5C6C]/50 bg-[#0E1016]/95 text-[#FF5C6C]',
-              info: 'border-[#5EE6FF]/50 bg-[#0E1016]/95 text-[#5EE6FF]',
-            }[toast.type || 'info'];
-
-            return (
-              <motion.div
-                key={toast.id}
-                initial={{ opacity: 0, x: 20, scale: 0.95 }}
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={{ opacity: 0, x: 20, scale: 0.95 }}
-                transition={{ duration: 0.2 }}
-                className={`pointer-events-auto p-4 rounded-xl border hud-panel-brackets shadow-2xl flex flex-col gap-0.5 ${borderColors}`}
-              >
-                <div className="font-heading font-bold text-xs text-white flex items-center justify-between">
-                  <span>{toast.title}</span>
-                </div>
-                {toast.message && (
-                  <p className="text-xs text-[#A7A29A] font-sans leading-relaxed">{toast.message}</p>
-                )}
-              </motion.div>
-            );
-          })}
+          {toasts.map((toast) => (
+            <motion.div
+              key={toast.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.18 }}
+              className="pointer-events-auto p-4 rounded-[16px] bg-[#FFFBF3] border border-[#EADFC9] shadow-lg text-[#2A1B12]"
+            >
+              <div className="font-heading font-bold text-[14px]">{toast.title}</div>
+              {toast.message && (
+                <p className="text-[12px] text-[#6B5B4E] mt-0.5 leading-relaxed">{toast.message}</p>
+              )}
+            </motion.div>
+          ))}
         </AnimatePresence>
       </div>
     </ToastContext.Provider>
@@ -319,231 +534,3 @@ export function useToast() {
   if (!ctx) throw new Error('useToast must be used within ToastProvider');
   return ctx;
 }
-
-/* 8. EmptyState */
-export interface EmptyStateProps {
-  icon: LucideIcon;
-  title: string;
-  description: string;
-  action?: {
-    label: string;
-    onClick: () => void;
-  };
-}
-
-export const EmptyState: React.FC<EmptyStateProps> = ({
-  icon: Icon,
-  title,
-  description,
-  action,
-}) => {
-  return (
-    <div className="hud-panel p-8 sm:p-12 text-center rounded-xl border border-[#2A2E3A] flex flex-col items-center justify-center">
-      <div className="w-12 h-12 rounded-xl bg-[#151821] border border-[#2A2E3A] flex items-center justify-center text-[#FFB81C] mb-3">
-        <Icon className="w-6 h-6" />
-      </div>
-      <h4 className="font-heading font-bold text-sm text-[#F4F1EC] mb-1 uppercase tracking-wider">{title}</h4>
-      <p className="text-xs text-[#A7A29A] max-w-sm mb-4 leading-relaxed font-sans">{description}</p>
-      {action && (
-        <ForgeButton variant="ghost" size="sm" onClick={action.onClick}>
-          {action.label}
-        </ForgeButton>
-      )}
-    </div>
-  );
-};
-
-/* 9. StatCard with Count-Up */
-export interface StatCardProps {
-  label: string;
-  value: number;
-  prefix?: string;
-  suffix?: string;
-  icon?: LucideIcon;
-  change?: string;
-  subtext?: string;
-}
-
-export const StatCard: React.FC<StatCardProps> = ({
-  label,
-  value,
-  prefix = '',
-  suffix = '',
-  icon: Icon,
-  change,
-  subtext,
-}) => {
-  const [displayValue, setDisplayValue] = useState(value);
-  const prevValue = useRef(value);
-
-  useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) {
-      setDisplayValue(value);
-      return;
-    }
-
-    const start = prevValue.current;
-    const end = value;
-    if (start === end) return;
-
-    const duration = 650;
-    const startTime = performance.now();
-
-    const step = (now: number) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-      const current = Math.round(start + (end - start) * ease);
-      setDisplayValue(current);
-
-      if (progress < 1) {
-        requestAnimationFrame(step);
-      } else {
-        prevValue.current = end;
-      }
-    };
-
-    requestAnimationFrame(step);
-  }, [value]);
-
-  return (
-    <HudPanel variant="default" className="flex flex-col justify-between">
-      <div className="flex items-center justify-between text-xs text-[#A7A29A] mb-2">
-        <span className="font-heading uppercase tracking-wider font-bold">{label}</span>
-        {Icon && <Icon className="w-4 h-4 text-[#FFB81C]" />}
-      </div>
-      <div className="flex items-baseline gap-2">
-        <span className="font-heading text-2xl sm:text-3xl font-black text-grad-forge tabular-nums tracking-tight">
-          {prefix}{displayValue.toLocaleString('en-IN')}{suffix}
-        </span>
-        {change && (
-          <span className="text-xs font-heading font-bold text-[#5EE6FF]">{change}</span>
-        )}
-      </div>
-      {subtext && <p className="text-xs text-[#A7A29A] mt-1 font-sans">{subtext}</p>}
-    </HudPanel>
-  );
-};
-
-/* 10. Drawer (Bottom on mobile <768px, Right on desktop >768px, with Focus Trap & Esc) */
-export interface DrawerProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  children: React.ReactNode;
-}
-
-export const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, title, children }) => {
-  const drawerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
-
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-end md:items-stretch md:justify-end">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
-          />
-          <motion.div
-            ref={drawerRef}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 30 }}
-            transition={{ type: 'spring', damping: 30, stiffness: 350 }}
-            className="relative w-full md:max-w-md bg-[#0E1016] border-t md:border-t-0 md:border-l border-[rgba(255,184,28,0.3)] p-5 sm:p-6 shadow-[0_0_40px_rgba(0,0,0,0.8)] z-10 max-h-[85vh] md:max-h-full overflow-y-auto"
-          >
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#2A2E3A]">
-              <h3 className="font-heading font-bold text-base uppercase tracking-wider text-[#F4F1EC] flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#5EE6FF] shadow-[0_0_6px_#5EE6FF]" />
-                {title}
-              </h3>
-              <button
-                onClick={onClose}
-                className="text-[#A7A29A] hover:text-[#F4F1EC] p-1.5 rounded-lg hover:bg-[#151821] cursor-pointer"
-                aria-label="Close drawer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            {children}
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
-  );
-};
-
-/* 11. Timeline: Vertical, Pending / Current (pulsing arc ring) / Done (filled gold line) */
-export interface TimelineStep {
-  id: string;
-  title: string;
-  time?: string | null;
-  description?: string;
-  isCompleted: boolean;
-  isCurrent: boolean;
-  isFailed?: boolean;
-}
-
-export const Timeline: React.FC<{ steps: TimelineStep[] }> = ({ steps }) => {
-  return (
-    <div className="relative pl-6 space-y-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-[#2A2E3A]">
-      {steps.map((step) => {
-        return (
-          <div key={step.id} className="relative group">
-            {/* Step Marker */}
-            <div
-              className={`absolute -left-6 top-0.5 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                step.isFailed
-                  ? 'border-[#FF5C6C] bg-[#FF5C6C]/20 text-[#FF5C6C]'
-                  : step.isCompleted
-                  ? 'border-[#FFB81C] bg-[#FFB81C] text-black shadow-[0_0_8px_rgba(255,184,28,0.5)]'
-                  : step.isCurrent
-                  ? 'border-[#5EE6FF] bg-[#5EE6FF]/20 text-[#5EE6FF] ring-4 ring-[#5EE6FF]/20 animate-pulse'
-                  : 'border-[#3B4150] bg-[#07070A] text-[#A7A29A]'
-              }`}
-            >
-              {step.isCompleted ? (
-                <span className="text-xs font-black">✓</span>
-              ) : (
-                <span className="w-1.5 h-1.5 rounded-full bg-current" />
-              )}
-            </div>
-
-            {/* Content */}
-            <div className="flex items-baseline justify-between gap-2">
-              <h5
-                className={`font-heading text-xs font-bold uppercase tracking-wider ${
-                  step.isCompleted || step.isCurrent ? 'text-[#F4F1EC]' : 'text-[#A7A29A]'
-                }`}
-              >
-                {step.title}
-              </h5>
-              {step.time && (
-                <span className="text-xs text-[#A7A29A] font-mono">
-                  {new Date(step.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </span>
-              )}
-            </div>
-            {step.description && (
-              <p className="text-xs text-[#A7A29A] mt-0.5 font-sans leading-relaxed">{step.description}</p>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
-};

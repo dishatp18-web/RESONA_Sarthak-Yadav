@@ -3,9 +3,16 @@
  * Seeds users, workers with various verification states, customers, admin,
  * and ~60 completed historical jobs with realistic INR pricing and intentional outliers.
  */
+import { pbkdf2Sync, randomBytes } from 'node:crypto';
 import { getDb, resetDatabase } from './db.js';
 import { NEIGHBORHOODS, SERVICE_CATEGORIES } from '../config.js';
 import { recordPriceBandSnapshot } from './band.js';
+
+function hashPassword(password: string): string {
+  const salt = randomBytes(16).toString('hex');
+  const hash = pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
+  return `${salt}:${hash}`;
+}
 
 export function seedData() {
   const db = getDb();
@@ -33,6 +40,9 @@ export function seedData() {
     INSERT INTO workers (user_id, categories, base_rate, rate_unit, radius_km, available, verification_status, verification_doc_path, verification_reject_reason, is_flagged, is_suspended, rating_avg, rating_count, jobs_completed)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
+  const updateUserAuth = db.prepare(`
+    UPDATE users SET email = ?, password_hash = ? WHERE id = ?
+  `);
 
   // 1. Seed 8 Customers
   const customers = [
@@ -48,6 +58,7 @@ export function seedData() {
 
   for (const c of customers) {
     insertUser.run(c.id, c.name, 'customer', c.phone, c.n.lat, c.n.lng, now.toISOString());
+    updateUserAuth.run(`${c.id}@fairfix.local`, hashPassword('demo123'), c.id);
   }
 
   // 2. Seed 1 Admin
@@ -60,6 +71,7 @@ export function seedData() {
     NEIGHBORHOODS[0].lng,
     now.toISOString()
   );
+  updateUserAuth.run('admin_1@fairfix.local', hashPassword('demo123'), 'admin_1');
 
   // 3. Seed 12 Workers across 4 neighborhoods, 6 categories, and all 4 verification states
   const workersData = [
@@ -247,6 +259,7 @@ export function seedData() {
 
   for (const w of workersData) {
     insertUser.run(w.id, w.name, 'worker', w.phone, w.n.lat, w.n.lng, now.toISOString());
+    updateUserAuth.run(`${w.id}@fairfix.local`, hashPassword('demo123'), w.id);
     const rejectReason = w.status === 'rejected' ? 'Document image blurred / unreadable credentials' : null;
     insertWorker.run(
       w.id,

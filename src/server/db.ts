@@ -25,10 +25,25 @@ export function initSchema(db: DatabaseSync) {
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
       role TEXT CHECK(role IN ('customer', 'worker', 'admin')) NOT NULL,
-      phone TEXT NOT NULL,
-      lat REAL NOT NULL,
-      lng REAL NOT NULL,
-      created_at TEXT NOT NULL
+      phone TEXT,
+      email TEXT,
+      password_hash TEXT,
+      lat REAL NOT NULL DEFAULT 0,
+      lng REAL NOT NULL DEFAULT 0,
+      profile_picture_path TEXT,
+      created_at TEXT NOT NULL,
+      updated_at TEXT,
+      is_active INTEGER NOT NULL DEFAULT 1
+    );
+
+    CREATE TABLE IF NOT EXISTS sessions (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      token_hash TEXT NOT NULL UNIQUE,
+      created_at TEXT NOT NULL,
+      expires_at TEXT NOT NULL,
+      last_seen_at TEXT NOT NULL,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     );
 
     CREATE TABLE IF NOT EXISTS workers (
@@ -138,6 +153,32 @@ export function initSchema(db: DatabaseSync) {
       confidence TEXT NOT NULL,
       computed_at TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS service_requests (
+      id TEXT PRIMARY KEY,
+      customer_id TEXT NOT NULL,
+      category TEXT NOT NULL,
+      title TEXT NOT NULL,
+      description TEXT NOT NULL,
+      lat REAL NOT NULL,
+      lng REAL NOT NULL,
+      address TEXT,
+      preferred_time TEXT,
+      urgency TEXT DEFAULT 'normal',
+      status TEXT CHECK(status IN ('open', 'quoted', 'accepted', 'in_progress', 'completed', 'cancelled')) DEFAULT 'open',
+      created_at TEXT NOT NULL,
+      updated_at TEXT,
+      FOREIGN KEY (customer_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS service_request_images (
+      id TEXT PRIMARY KEY,
+      service_request_id TEXT NOT NULL,
+      path TEXT NOT NULL,
+      mime_type TEXT NOT NULL,
+      created_at TEXT NOT NULL,
+      FOREIGN KEY (service_request_id) REFERENCES service_requests(id) ON DELETE CASCADE
+    );
   `);
 
   // Migration fallbacks for existing tables
@@ -152,12 +193,24 @@ export function initSchema(db: DatabaseSync) {
   addCol('jobs', 'share_token TEXT');
   addCol('reports', 'worker_id TEXT');
   addCol('reports', 'details TEXT');
+  addCol('users', 'email TEXT');
+  addCol('users', 'password_hash TEXT');
+  addCol('users', 'profile_picture_path TEXT');
+  addCol('users', 'updated_at TEXT');
+  addCol('users', 'is_active INTEGER NOT NULL DEFAULT 1');
+
+  db.exec(`CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);`);
+  db.exec(`CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id);`);
+  db.exec(`CREATE INDEX IF NOT EXISTS idx_service_requests_customer ON service_requests(customer_id);`);
 }
 
 export function resetDatabase() {
   const db = getDb();
   try {
     db.exec(`
+      DELETE FROM service_request_images;
+      DELETE FROM service_requests;
+      DELETE FROM sessions;
       DELETE FROM tracking_points;
       DELETE FROM incidents;
       DELETE FROM reports;

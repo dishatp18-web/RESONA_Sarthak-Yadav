@@ -32,18 +32,18 @@ export const SERVICE_CATEGORIES = [
   { id: 'cleaning', name: 'House Cleaning', baselinePrice: 750, unit: 'per_job', icon: 'Sparkles' },
   { id: 'appliance', name: 'AC & Appliance Repair', baselinePrice: 950, unit: 'per_job', icon: 'Fan' },
   { id: 'carpentry', name: 'Carpenter & Painter', baselinePrice: 650, unit: 'per_job', icon: 'Hammer' },
-  { id: 'cook_maid', name: 'Cook & Maid', baselinePrice: 500, unit: 'per_job', icon: 'Utensils' },
+  { id: 'cook_maid', name: 'Cooking & Housekeeping', baselinePrice: 500, unit: 'per_job', icon: 'Utensils' },
 ] as const;
 
 export type CategoryId = typeof SERVICE_CATEGORIES[number]['id'];
 
 export const CATEGORY_LABELS: Record<string, string> = {
-  plumbing: 'Plumbing',
-  electrician: 'Electrician',
+  plumbing: 'Plumbing Services',
+  electrician: 'Electrical Services',
   cleaning: 'House Cleaning',
   appliance: 'AC & Appliance Repair',
-  carpentry: 'Carpenter & Painter',
-  cook_maid: 'Cook & Maid',
+  carpentry: 'Carpentry & Painting',
+  cook_maid: 'Cooking & Housekeeping',
 };
 
 export function getCategoryLabel(catId: string): string {

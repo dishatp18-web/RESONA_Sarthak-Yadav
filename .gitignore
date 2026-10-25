@@ -6,9 +6,3 @@ coverage/
 *.log
 .env*
 !.env.example
-*.sqlite
-*.sqlite-journal
-fairfix.sqlite
-uploads/*
-!uploads/.gitkeep
-
